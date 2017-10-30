@@ -15,7 +15,7 @@ public class FoxCollider : MonoBehaviour {
 	void Update () {
 		
 	}
-
+    /*
     private void OnTriggerEnter(Collider other)
     {
 
@@ -26,4 +26,5 @@ public class FoxCollider : MonoBehaviour {
             Destroy(other.gameObject);
         }
     }
+    */
 }

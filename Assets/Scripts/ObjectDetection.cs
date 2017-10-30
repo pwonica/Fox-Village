@@ -9,11 +9,14 @@ public class ObjectDetection : MonoBehaviour {
     public bool objectDetected = false;
     public Transform targetObject;
 
+    public FoxAI foxAIController;
+
 
 	// Use this for initialization
 	void Start () {
-		
-	}
+        foxAIController = GetComponentInParent<FoxAI>();
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -26,6 +29,7 @@ public class ObjectDetection : MonoBehaviour {
         {
             objectDetected = true;
             targetObject = other.transform;
+            foxAIController.EnterChase();
         }
        
 
@@ -37,6 +41,7 @@ public class ObjectDetection : MonoBehaviour {
         {
             objectDetected = false;
             targetObject = null;
+            foxAIController.ExitChase();
             //this.GetComponentInParent<Fox>().OnCollisionExitChild();
         }
 

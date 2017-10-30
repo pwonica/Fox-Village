@@ -15,7 +15,7 @@ public class Fox : MonoBehaviour {
     public int happinessDecay;
 
 
-
+    /*
     
 	// Use this for initialization
 	void Start () {
@@ -70,7 +70,7 @@ public class Fox : MonoBehaviour {
     }
 
  
-    
+    */
 
     private void Runaway()
     {
