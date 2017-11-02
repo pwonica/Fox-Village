@@ -6,6 +6,7 @@ public class Movement : MonoBehaviour {
 
     public float moveSpeed;
     public float rotationSpeed;
+    private FoxAI foxAI;
 
     public Transform currentWaypoint;
     public Transform randomWayPoint;
@@ -16,6 +17,7 @@ public class Movement : MonoBehaviour {
 
     private void Start()
     {
+        foxAI = GetComponentInParent<FoxAI>();
         currentWaypoint = randomWayPoint;
         GetWaypoint();
     }
@@ -33,11 +35,15 @@ public class Movement : MonoBehaviour {
             transform.LookAt(currentWaypoint);
         }
 
-        if ((transform.position - currentWaypoint.position).magnitude < 3)
+        if(foxAI.aiState == FoxAI.States.wandering)
         {
-            print("Arrived at point");
-            GetWaypoint();
+            if ((transform.position - currentWaypoint.position).magnitude < 3)
+            {
+                print("Arrived at point");
+                GetWaypoint();
+            }
         }
+      
     }
 
     public void ResetWandering()

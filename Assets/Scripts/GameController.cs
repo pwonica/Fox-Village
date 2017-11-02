@@ -35,7 +35,19 @@ public class GameController : MonoBehaviour {
         //placeholder to do other things
         points -= foxRemovePoints;
         print("You lost a fox!");
+        
 
     }
+
+    public void AddPoints(int valueToAdd) {
+        points += valueToAdd;
+        UIManager.instance.UpdatePoints();
+    }
+    public void SubtractPoints(int valueToReduce) {
+        points -= valueToReduce;
+        UIManager.instance.UpdatePoints();
+    }
+
+
 }
 

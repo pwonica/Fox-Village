@@ -25,13 +25,24 @@ public class ObjectDetection : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
+        //if notices the fox, don't do anything
+
+        
+            if (other.tag == tagToDetect)
+            {
+                objectDetected = true;
+                targetObject = other.transform;
+                foxAIController.EnterChase();
+            }
+      
+        /*
         if (other.tag == tagToDetect)
         {
             objectDetected = true;
             targetObject = other.transform;
             foxAIController.EnterChase();
         }
-       
+       */
 
     }
 

@@ -10,7 +10,7 @@ public class FoxAI : MonoBehaviour
         begging
     }
 
-    private Rigidbody rigidbody;
+    //private Rigidbody rigidbody;
     private ObjectDetection detectorFood;
     private Movement movementController;
 
@@ -21,7 +21,7 @@ public class FoxAI : MonoBehaviour
     private void Start()
     {
         aiState = States.wandering;
-        rigidbody = GetComponent<Rigidbody>();
+        //rigidbody = GetComponent<Rigidbody>();
         movementController = GetComponentInChildren<Movement>();
         detectorFood = GetComponentInChildren<ObjectDetection>();
 
@@ -34,23 +34,7 @@ public class FoxAI : MonoBehaviour
         //gameObject.transform.position = movementController.transform.position;
         //transform.position = movementController.transform.position;
         detectorFood.transform.position = movementController.transform.position;
-
-
-        if (detectorFood.objectDetected)
-        {
-            //movementController.whichState = Movement.BehaviorState.MoveTowardsFood;
-            //movementController.hasTarget = true;
-            //movementController.objectTarget = detectorFood.targetObject;
-        }
-        else
-        {
-            //movementController.whichState = Movement.BehaviorState.Wander;
-            //movementController.hasTarget = false;
-            //remove target from controller
-            //movementController.objectTarget = null;
-
-        }
-
+        
         switch (aiState)
         {
             case States.wandering:
@@ -96,14 +80,7 @@ public class FoxAI : MonoBehaviour
     }
 
     
-
-    //go after food!
-    private void Chase()
-    {
-
-    }
     
-
   
  
 

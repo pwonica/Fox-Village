@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class Fox : MonoBehaviour {
 
-
+    private FoxAI foxAI;
     private ObjectDetection detectorFood;
     private Movement movementController;
 
@@ -14,18 +14,29 @@ public class Fox : MonoBehaviour {
 
     public int happinessDecay;
 
-
-    /*
-    
-	// Use this for initialization
-	void Start () {
-        detectorFood = GetComponentInChildren<ObjectDetection>();
-        movementController = GetComponentInChildren<Movement>();
-        movementController.whichState = Movement.BehaviorState.Wander;
-
+    private void Start()
+    {
+        foxAI = GetComponent<FoxAI>();
         Invoke("DecreaseHappiness", 1f);
-		
-	}
+        //detectorFood = GetComponentInChildren<ObjectDetection>();
+        //movementController = GetComponentInChildren<Movement>();
+        //movementController.whichState = Movement.BehaviorState.Wander;
+
+    }
+    public void EatFood(int valueToAdd)
+    {
+        //boost happiness
+        happiness += valueToAdd;
+        GameController.instance.AddPoints(valueToAdd);
+        //create a ui icon showing a heart 
+        //reset wander and follow
+        foxAI.ExitChase();
+       
+        //movementController.objectTarget = null;
+        //movementController.hasTarget = false;
+    }
+    /*
+   
 	
 	// Update is called once per frame
 	void Update () {
@@ -47,16 +58,7 @@ public class Fox : MonoBehaviour {
 
         }
     }
-
-    public void EatFood(int valueToAdd)
-    {
-        //boost happiness
-        happiness += valueToAdd;
-        //reset wander and follow
-        movementController.objectTarget = null;
-        detectorFood.targetObject = null;
-        movementController.hasTarget = false;
-    }
+    
 
     private void DecreaseHappiness()
     {

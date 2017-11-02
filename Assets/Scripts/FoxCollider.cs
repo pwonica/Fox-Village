@@ -5,26 +5,49 @@ using UnityEngine;
 public class FoxCollider : MonoBehaviour {
 
     public Fox parentFox;
+    public string tagToDetect;
+    public bool objectDetected = false;
+    public Transform targetObject;
 
-	// Use this for initialization
-	void Start () {
+    public FoxAI foxAIController;
+
+    // Use this for initialization
+    void Start () {
         parentFox = GetComponentInParent<Fox>();
-	}
-	
-	// Update is called once per frame
-	void Update () {
+        foxAIController = GetComponentInParent<FoxAI>();
+
+
+    }
+
+    // Update is called once per frame
+    void Update () {
 		
 	}
-    /*
-    private void OnTriggerEnter(Collider other)
-    {
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "food")
+        {
+            print("Fox ate food");
+            parentFox.EatFood(collision.gameObject.GetComponent<Food>().pointsValue);
+            Destroy(collision.gameObject);
+            //exit from chase
+        }
+   
+    }
+    /*
+    
+    void OnTriggerEnter(Collider other)
+    {
+        
         if (other.tag == "food")
         {
             print("Fox ate food");
-            parentFox.EatFood(other.gameObject.GetComponent<Food>().pointsValue);           
+            parentFox.EatFood(other.gameObject.GetComponent<Food>().pointsValue);
             Destroy(other.gameObject);
+            //exit from chase
         }
     }
     */
+
 }
