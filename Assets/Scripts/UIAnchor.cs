@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class UIAnchor : MonoBehaviour {
 
+    
     // Assign this to the object you want the health bar to track:
     public Transform objectToFollow;
 

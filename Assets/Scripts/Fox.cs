@@ -6,35 +6,82 @@ using UnityEngine.UI;
 public class Fox : MonoBehaviour {
 
     private FoxAI foxAI;
+    public Transform foxTransform;
     private ObjectDetection detectorFood;
     private Movement movementController;
+    public GameObject anchorTextReference;
+    public GameObject ui_rectScrollNameReference;
 
-    private string foxName;
-    public int happiness = 50;
+    public string foxName;
+    public int fullness = 50;
+    public float foxDecreaseRate;
 
-    public int happinessDecay;
+    public Text txtFoxNameDisplay;
+    public int fullnessDecay;
+    public GameObject uiFeedbackIcon;
+    public Canvas canvas;
+    public Camera cam;
 
     private void Start()
     {
+        canvas = FindObjectOfType<Canvas>();
+        cam = FindObjectOfType<Camera>();
         foxAI = GetComponent<FoxAI>();
-        Invoke("DecreaseHappiness", 1f);
+        foxName = GetFoxName();
+        Invoke("DecreaseFullness", 0f);
         //detectorFood = GetComponentInChildren<ObjectDetection>();
         //movementController = GetComponentInChildren<Movement>();
         //movementController.whichState = Movement.BehaviorState.Wander;
-
+        //CreateFeedbackIcon("happy");
+        anchorTextReference = UIManager.instance.CreateAnchoredText(foxName, foxTransform);
+        UIManager.instance.AddNameInRectScroll(gameObject);
     }
+
+
     public void EatFood(int valueToAdd)
     {
-        //boost happiness
-        happiness += valueToAdd;
+        //boost fullness
+        fullness += valueToAdd;
+        if (fullness > 100) { fullness = 100; }
         GameController.instance.AddPoints(valueToAdd);
         //create a ui icon showing a heart 
         //reset wander and follow
         foxAI.ExitChase();
-       
+        UIManager.instance.CreateFeedbackIcon(foxTransform, FeedbackIconType.happy);
+
         //movementController.objectTarget = null;
         //movementController.hasTarget = false;
     }
+
+    private string GetFoxName()
+    {
+        return "Fogs";
+    }
+
+    private void DecreaseFullness()
+    {
+        fullness -= fullnessDecay;
+        if (fullness < 1)
+        {
+            Runaway();
+        }
+        Invoke("DecreaseFullness", foxDecreaseRate);
+
+    }
+
+    private void Runaway()
+    {
+        //delete the UI object in the UI controller here
+        UIManager.instance.RemoveNameInRectScroll(ui_rectScrollNameReference);
+        //delete the UI anchor text
+        anchorTextReference.SetActive(false);
+        Destroy(anchorTextReference);
+        GameController.instance.RemoveFox(gameObject);
+
+
+        //lose points
+    }
+
     /*
    
 	
@@ -60,26 +107,21 @@ public class Fox : MonoBehaviour {
     }
     
 
-    private void DecreaseHappiness()
+    private void Decreasefullness()
     {
-        happiness -= happinessDecay;
-        if (happiness < 1)
+        fullness -= fullnessDecay;
+        if (fullness < 1)
         {
             Runaway();
         }
-        Invoke("DecreaseHappiness", 1f);
+        Invoke("Decreasefullness", 1f);
        
     }
 
  
     */
 
-    private void Runaway()
-    {
-        Destroy(gameObject);
-        //lose points
-    }
-    
+
     /*
     //if the fox has left food radius, pick a new waypoint
     public void OnCollisionExitChild()

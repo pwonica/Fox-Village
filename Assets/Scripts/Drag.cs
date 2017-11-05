@@ -50,7 +50,6 @@ public class Drag : MonoBehaviour {
     //check if it's at it's original point and then return to the element, if not, then drop in place
     private void OnMouseUp()
     {
-        print(transform.position + " // " + originalLocation);
         //if it's not within the range of the origin point, then reduce 
         if (!((transform.position - originalLocation).magnitude < returnDistanceOffset))
         {

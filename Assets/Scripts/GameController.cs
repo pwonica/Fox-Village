@@ -8,6 +8,13 @@ public class GameController : MonoBehaviour {
 
     public int points = 0;
     public int foxRemovePoints;
+    public int foxPurchaseCost;
+
+    public Transform foxSpawnLocation;
+    public GameObject pfabFox;
+
+    public List<GameObject> foxList = new List<GameObject>();
+
 
     private void Awake()
     {
@@ -23,16 +30,42 @@ public class GameController : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
     }
 
-    
-	
-	// Update is called once per frame
-	void Update () {
+
+    private void Start()
+    {
+        AddFox();
+    }
+    // Update is called once per frame
+    void Update () {
 		
 	}
 
-    public void RemoveFox()
+    public void AddFox()
+    {
+        GameObject foxToCreate = Instantiate(pfabFox, foxSpawnLocation.position, Quaternion.identity);
+        foxList.Add(foxToCreate);
+
+    }
+
+    public void PurchaseFox()
+    {
+        if (points > foxPurchaseCost)
+        {
+            AddFox();
+            points -= foxPurchaseCost;
+        }
+        else
+        {
+            //play error sound
+        }
+
+    }
+
+    public void RemoveFox(GameObject foxToRemove)
     {
         //placeholder to do other things
+        foxList.Remove(foxToRemove);
+        GameObject.Destroy(foxToRemove);
         points -= foxRemovePoints;
         print("You lost a fox!");
         
