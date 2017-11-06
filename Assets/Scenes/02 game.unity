@@ -512,9 +512,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d3e0dab4369e394f8300bcc8ebb52db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  points: 500
-  foxRemovePoints: 10
-  foxPurchaseCost: 0
+  points: 100
+  foxRemovePoints: 150
+  hungryDecreaseRate: 0
+  foxPurchaseCost: 100
   foxSpawnLocation: {fileID: 1317371496}
   pfabFox: {fileID: 1348462351718732, guid: 127621c198c45aa43abf0bd07e545637, type: 2}
   foxList: []
@@ -546,7 +547,7 @@ MonoBehaviour:
     type: 2}
   pfab_uiAnchoredText: {fileID: 1372647605772472, guid: a3b957b09b940b8438d6f89def63ab7b,
     type: 2}
-  pfab_uiFoxRectText: {fileID: 1681414545290320, guid: ad9eaa395114c8d4bb7b4d9a0cb4f5ff,
+  pfab_uiFoxInfoRect: {fileID: 1498426361188292, guid: 0bd4962e32f1ec2458533f696f16876b,
     type: 2}
   foxNamesHierachy: {fileID: 1491429079}
   foxRectScroll: {fileID: 1308038447}
@@ -1156,7 +1157,7 @@ MonoBehaviour:
   m_ChildAlignment: 4
   m_StartCorner: 0
   m_StartAxis: 1
-  m_CellSize: {x: 170, y: 17.5}
+  m_CellSize: {x: 170, y: 12}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
@@ -1461,6 +1462,49 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1775213025}
+--- !u!1 &1790908449
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1790908451}
+  - component: {fileID: 1790908450}
+  m_Layer: 0
+  m_Name: Name Generator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1790908450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1790908449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7bd5ad01f43b1e40a41d8c1eddf5425, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nameTextFile: {fileID: 4900000, guid: a85f787916286e342a6252fe0b586a81, type: 3}
+  names: []
+  foxNameList: []
+--- !u!4 &1790908451
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1790908449}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1793459731
 GameObject:
   m_ObjectHideFlags: 0

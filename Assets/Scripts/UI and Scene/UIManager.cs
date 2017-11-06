@@ -8,7 +8,7 @@ public class UIManager : MonoBehaviour {
     public static UIManager instance = null;
     public GameObject uiFeedbackIcon;
     public GameObject pfab_uiAnchoredText;
-    public GameObject pfab_uiFoxRectText;
+    public GameObject pfab_uiFoxInfoRect;
     private Canvas canvas;
 
     public Transform foxNamesHierachy;
@@ -54,9 +54,9 @@ public class UIManager : MonoBehaviour {
     public void AddNameInRectScroll(GameObject foxToReference)
     {
         //create the ui element
-        GameObject objectToCreate = Instantiate(pfab_uiFoxRectText) as GameObject;
+        GameObject objectToCreate = Instantiate(pfab_uiFoxInfoRect) as GameObject;
         objectToCreate.transform.SetParent(foxRectScroll, false);
-        objectToCreate.GetComponent<FoxUIDisplay>().foxObject = foxToReference;
+        objectToCreate.GetComponent<UI_foxInfoRect>().foxObject = foxToReference;
         //create a reference of the display text in the fox in case you want to delete it at a later point
         foxToReference.GetComponent<Fox>().ui_rectScrollNameReference = objectToCreate;
         //parent it 

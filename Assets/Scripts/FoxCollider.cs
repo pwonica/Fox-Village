@@ -35,19 +35,6 @@ public class FoxCollider : MonoBehaviour {
         }
    
     }
-    /*
     
-    void OnTriggerEnter(Collider other)
-    {
-        
-        if (other.tag == "food")
-        {
-            print("Fox ate food");
-            parentFox.EatFood(other.gameObject.GetComponent<Food>().pointsValue);
-            Destroy(other.gameObject);
-            //exit from chase
-        }
-    }
-    */
 
 }

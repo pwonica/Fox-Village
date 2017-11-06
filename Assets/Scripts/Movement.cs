@@ -10,6 +10,7 @@ public class Movement : MonoBehaviour {
 
     public Transform currentWaypoint;
     public Transform randomWayPoint;
+    Vector3 targetPosition;
     public float maxX;
     public float minX;
     public float maxZ;
@@ -32,7 +33,9 @@ public class Movement : MonoBehaviour {
         {
             //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(waypoint.position - transform.position), rotationSpeed * Time.deltaTime);
             transform.position = Vector3.MoveTowards(new Vector3(transform.position.x, 0f, transform.position.z), currentWaypoint.position, moveSpeed * Time.deltaTime);
-            transform.LookAt(currentWaypoint);
+            targetPosition = new Vector3(currentWaypoint.position.x, this.transform.position.y, currentWaypoint.position.z);
+            transform.LookAt(targetPosition);
+            //transform.LookAt(currentWaypoint);
         }
 
         if(foxAI.aiState == FoxAI.States.wandering)
@@ -45,6 +48,8 @@ public class Movement : MonoBehaviour {
         }
       
     }
+
+    
 
     public void ResetWandering()
     {

@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 222686062910241960}
   - component: {fileID: 114716612966128920}
   - component: {fileID: 114006908437203484}
+  - component: {fileID: 114037402073708728}
   m_Layer: 5
   m_Name: ui_FoxNameRect
   m_TagString: Untagged
@@ -41,6 +42,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   foxObject: {fileID: 0}
+  textToDisplay: {fileID: 0}
+  hungerSlider: {fileID: 0}
+  emotionSprite: {fileID: 0}
+  iconHappy: {fileID: 0}
+  iconSad: {fileID: 0}
+--- !u!114 &114037402073708728
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1681414545290320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2acb11081ab7a2145be28ec380be3aab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  foxObject: {fileID: 0}
+  textToDisplay: {fileID: 0}
+  hungerSlider: {fileID: 0}
+  emotionSprite: {fileID: 0}
+  iconHappy: {fileID: 0}
+  iconSad: {fileID: 0}
 --- !u!114 &114716612966128920
 MonoBehaviour:
   m_ObjectHideFlags: 1

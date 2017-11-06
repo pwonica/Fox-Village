@@ -13,6 +13,9 @@ public class Drag : MonoBehaviour {
     public float yOffset;
 
     private bool isMouseDrag = false;
+    private bool canUse = true;
+    private float cooldownTimer;
+    public float cooldownRate;                                 //how often you can use it
 
     private bool originalLocationSet;
     private Vector3 originalLocation;
@@ -44,6 +47,8 @@ public class Drag : MonoBehaviour {
             originalLocation.y = yOffset;
             originalLocationSet = true;
         }
+        
+          
     }
 
 

@@ -7,17 +7,25 @@ public class Fox : MonoBehaviour {
 
     private FoxAI foxAI;
     public Transform foxTransform;
+    public Transform foxModel;
     private ObjectDetection detectorFood;
     private Movement movementController;
+
+
     public GameObject anchorTextReference;
     public GameObject ui_rectScrollNameReference;
 
     public string foxName;
-    public int fullness = 50;
+    public int fullness = 70;
     public float foxDecreaseRate;
+    public int fullnessDecay;
+
+    public float hungryCheckRate;                           //how often it checks if it's hungry and deducts points
+    private bool isHungry = false;
+
+
 
     public Text txtFoxNameDisplay;
-    public int fullnessDecay;
     public GameObject uiFeedbackIcon;
     public Canvas canvas;
     public Camera cam;
@@ -27,13 +35,13 @@ public class Fox : MonoBehaviour {
         canvas = FindObjectOfType<Canvas>();
         cam = FindObjectOfType<Camera>();
         foxAI = GetComponent<FoxAI>();
-        foxName = GetFoxName();
+        foxName = NameGenerator.instance.GetName();
         Invoke("DecreaseFullness", 0f);
         //detectorFood = GetComponentInChildren<ObjectDetection>();
         //movementController = GetComponentInChildren<Movement>();
         //movementController.whichState = Movement.BehaviorState.Wander;
         //CreateFeedbackIcon("happy");
-        anchorTextReference = UIManager.instance.CreateAnchoredText(foxName, foxTransform);
+        anchorTextReference = UIManager.instance.CreateAnchoredText(foxName, foxModel);
         UIManager.instance.AddNameInRectScroll(gameObject);
     }
 
@@ -53,10 +61,7 @@ public class Fox : MonoBehaviour {
         //movementController.hasTarget = false;
     }
 
-    private string GetFoxName()
-    {
-        return "Fogs";
-    }
+
 
     private void DecreaseFullness()
     {

@@ -8,6 +8,7 @@ public class GameController : MonoBehaviour {
 
     public int points = 0;
     public int foxRemovePoints;
+    public int hungryDecreaseRate;                              //how many points are removed per hungry fox
     public int foxPurchaseCost;
 
     public Transform foxSpawnLocation;
@@ -52,7 +53,7 @@ public class GameController : MonoBehaviour {
         if (points > foxPurchaseCost)
         {
             AddFox();
-            points -= foxPurchaseCost;
+            SubtractPoints(foxPurchaseCost);
         }
         else
         {
@@ -66,7 +67,7 @@ public class GameController : MonoBehaviour {
         //placeholder to do other things
         foxList.Remove(foxToRemove);
         GameObject.Destroy(foxToRemove);
-        points -= foxRemovePoints;
+        SubtractPoints(foxRemovePoints);
         print("You lost a fox!");
         
 
