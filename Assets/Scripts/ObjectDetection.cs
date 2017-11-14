@@ -32,7 +32,7 @@ public class ObjectDetection : MonoBehaviour {
             {
                 objectDetected = true;
                 targetObject = other.transform;
-                foxAIController.EnterChase();
+                foxAIController.EnterCHASE();
             }
       
         /*
@@ -40,7 +40,7 @@ public class ObjectDetection : MonoBehaviour {
         {
             objectDetected = true;
             targetObject = other.transform;
-            foxAIController.EnterChase();
+            foxAIController.EnterCHASE();
         }
        */
 
@@ -52,7 +52,7 @@ public class ObjectDetection : MonoBehaviour {
         {
             objectDetected = false;
             targetObject = null;
-            foxAIController.ExitChase();
+            foxAIController.ExitCHASE();
             //this.GetComponentInParent<Fox>().OnCollisionExitChild();
         }
 
