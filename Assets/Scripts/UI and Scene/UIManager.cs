@@ -9,7 +9,6 @@ public class UIManager : MonoBehaviour {
     public GameObject uiFeedbackIcon;
     public GameObject pfab_uiAnchoredText;
     public GameObject pfab_uiFoxInfoRect;
-    public GameObject pfab_uiFloatingPopup;
     private Canvas canvas;
 
     public Transform foxNamesHierachy;
@@ -88,14 +87,6 @@ public class UIManager : MonoBehaviour {
         ((ViewportPosition.y * CanvasRect.sizeDelta.y) - (CanvasRect.sizeDelta.y * 0.5f)));
 
         uiReference.anchoredPosition = screenPosition;
-    }
-
-    public void CreatePopupText(string textToAssign)
-    {
-        //create the text object 
-        GameObject objectToCreate = Instantiate(pfab_uiFloatingPopup) as GameObject;
-        objectToCreate.transform.SetParent(foxNamesHierachy, false);
-        objectToCreate.GetComponentInChildren<Text>().text = textToAssign;
     }
 
     public GameObject CreateAnchoredText(string textToAssign, Transform transformToFollow)

@@ -5,51 +5,27 @@ public class FoxAI : MonoBehaviour
 {
     public enum States
     {
-        WANDER,
-        CHASE,
-        BEG,
-        NAP
+        wandering,
+        chase,
+        begging
     }
 
     //private Rigidbody rigidbody;
     private ObjectDetection detectorFood;
     private Movement movementController;
 
-    private bool isAlive; 
+
     public States aiState;
 
-    private void Awake()
-    {
-        movementController = GetComponentInChildren<Movement>();
-        detectorFood = GetComponentInChildren<ObjectDetection>();
-    }
+
     private void Start()
     {
-        aiState = States.WANDER;
-        //activate the state machine 
-    }
+        aiState = States.wandering;
+        //rigidbody = GetComponent<Rigidbody>();
+        movementController = GetComponentInChildren<Movement>();
+        detectorFood = GetComponentInChildren<ObjectDetection>();
 
-    IEnumerator StateMachine()
-    {
-        while (isAlive)
-        {
-            switch (aiState)
-            {
-                case States.WANDER:
-                    movementController.MovingTowardsPoint();
-                    break;
-                case States.CHASE:
-                    movementController.MovingTowardsPoint();
-                    break;
-                case States.BEG:
-                    break;
-                case States.NAP:
-                    break;
-            }
-            yield return null;
-
-        }
-
+        
     }
 
     private void Update()
@@ -61,10 +37,10 @@ public class FoxAI : MonoBehaviour
         
         switch (aiState)
         {
-            case States.WANDER:
+            case States.wandering:
                 movementController.MovingTowardsPoint();
                 break;
-            case States.CHASE:
+            case States.chase:
                 movementController.MovingTowardsPoint();
                 break;
 
@@ -79,30 +55,28 @@ public class FoxAI : MonoBehaviour
 
     }
 
-    
-
-    public void EnterCHASE()
+    public void EnterChase()
     {
-        print("Entering CHASE");
-        aiState = States.CHASE;
+        print("Entering chase");
+        aiState = States.chase;
         movementController.currentWaypoint = detectorFood.targetObject;
         //assign the waypoint to the object detected
         
     }
 
-    public void ExitCHASE()
+    public void ExitChase()
     {
-        print("Exiting CHASE");
-        aiState = States.WANDER;
-        movementController.ResetWANDER();
+        print("Exiting chase");
+        aiState = States.wandering;
+        movementController.ResetWandering();
     }
 
     private void StateLogic()
     {
-        //check for target, if target, then CHASE
+        //check for target, if target, then chase
         
         //else, just wander at random 
-        //if exiting target, then get back to WANDER 
+        //if exiting target, then get back to wandering 
     }
 
     

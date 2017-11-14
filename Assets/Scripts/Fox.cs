@@ -30,7 +30,7 @@ public class Fox : MonoBehaviour {
     public Canvas canvas;
     public Camera cam;
 
-    private void Awake()
+    private void Start()
     {
         canvas = FindObjectOfType<Canvas>();
         cam = FindObjectOfType<Camera>();
@@ -54,7 +54,7 @@ public class Fox : MonoBehaviour {
         GameController.instance.AddPoints(valueToAdd);
         //create a ui icon showing a heart 
         //reset wander and follow
-        foxAI.ExitCHASE();
+        foxAI.ExitChase();
         UIManager.instance.CreateFeedbackIcon(foxTransform, FeedbackIconType.happy);
 
         //movementController.objectTarget = null;

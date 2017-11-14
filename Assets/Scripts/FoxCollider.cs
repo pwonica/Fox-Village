@@ -31,7 +31,7 @@ public class FoxCollider : MonoBehaviour {
             print("Fox ate food");
             parentFox.EatFood(collision.gameObject.GetComponent<Food>().pointsValue);
             Destroy(collision.gameObject);
-            //exit from CHASE
+            //exit from chase
         }
    
     }
