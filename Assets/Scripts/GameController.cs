@@ -34,12 +34,23 @@ public class GameController : MonoBehaviour {
 
     private void Start()
     {
-        AddFox();
+        //AddFox();
     }
     // Update is called once per frame
     void Update () {
 		
 	}
+
+    public void Save()
+    {
+        SaveManager.SaveGame(foxList, points);
+    }
+
+    public void Load()
+    {
+        List<string> namesList = SaveManager.LoadGame();
+        print(namesList);
+    }
 
     public void AddFox()
     {

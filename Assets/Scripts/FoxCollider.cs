@@ -2,39 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//todo refactor this entire thing into FoxAI or somewhere more relevant
 public class FoxCollider : MonoBehaviour {
 
     public Fox parentFox;
-    public string tagToDetect;
-    public bool objectDetected = false;
-    public Transform targetObject;
-
     public FoxAI foxAIController;
 
     // Use this for initialization
     void Start () {
         parentFox = GetComponentInParent<Fox>();
         foxAIController = GetComponentInParent<FoxAI>();
-
-
     }
 
-    // Update is called once per frame
-    void Update () {
-		
-	}
-
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.tag == "food")
+        if (other.tag == "food")
         {
             print("Fox ate food");
-            parentFox.EatFood(collision.gameObject.GetComponent<Food>().pointsValue);
-            Destroy(collision.gameObject);
+            parentFox.EatFood(other.gameObject.GetComponent<Food>().pointsValue);
+            Destroy(other.gameObject);
             //exit from chase
+            //todo where does it actually exit from the chase?
         }
-   
     }
-    
+
+
 
 }

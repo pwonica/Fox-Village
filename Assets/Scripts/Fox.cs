@@ -11,52 +11,64 @@ public class Fox : MonoBehaviour {
     private ObjectDetection detectorFood;
     private Movement movementController;
 
-
-    public GameObject anchorTextReference;
-    public GameObject ui_rectScrollNameReference;
+    [HideInInspector] public GameObject anchorTextReference;
+    [HideInInspector] public GameObject ui_rectScrollNameReference;
 
     public string foxName;
-    public int fullness = 70;
+    public float fullness = 70;
     public float foxDecreaseRate;
-    public int fullnessDecay;
 
-    public float hungryCheckRate;                           //how often it checks if it's hungry and deducts points
-    private bool isHungry = false;
+    //unique fox characteristics
+    public float moveSpeed;
+    [HideInInspector] public float averageNapTime;
+    [HideInInspector] public float averageNapApart;
+    public float fullnessDecay;
+
+    [HideInInspector] public float napDecayModifier;                          //modifier that affects hunger during a nap time (ex: 0.5, 0.75 * normal hunger decrease)     
+    [HideInInspector] public float currentNapDecayModifier;                   //modifier that switches; normally is 1, but in nap state, changes to nap decay modifier
+
+    //variables for randomizations;
+    public float averageNapTime_min;
+    public float averageNapTime_max;
+    public float averageNapApart_min;
+    public float averageNapApart_max;
 
 
+    private Text txtFoxNameDisplay;
+    private GameObject uiFeedbackIcon;
+    //private Canvas canvas;
+    //private Camera cam;
 
-    public Text txtFoxNameDisplay;
-    public GameObject uiFeedbackIcon;
-    public Canvas canvas;
-    public Camera cam;
-
+    private void Awake()
+    {
+        //canvas = FindObjectOfType<Canvas>();
+        //cam = FindObjectOfType<Camera>();
+        foxAI = GetComponent<FoxAI>();
+        RandomizeFox();
+    }
     private void Start()
     {
-        canvas = FindObjectOfType<Canvas>();
-        cam = FindObjectOfType<Camera>();
-        foxAI = GetComponent<FoxAI>();
         foxName = NameGenerator.instance.GetName();
         Invoke("DecreaseFullness", 0f);
-        //detectorFood = GetComponentInChildren<ObjectDetection>();
-        //movementController = GetComponentInChildren<Movement>();
-        //movementController.whichState = Movement.BehaviorState.Wander;
-        //CreateFeedbackIcon("happy");
         anchorTextReference = UIManager.instance.CreateAnchoredText(foxName, foxModel);
         UIManager.instance.AddNameInRectScroll(gameObject);
+    }
+
+    private void RandomizeFox()
+    {
+        averageNapApart = Random.Range(averageNapApart_min, averageNapApart_max);
+        averageNapTime = Random.Range(averageNapTime_min, averageNapTime_max);
     }
 
 
     public void EatFood(int valueToAdd)
     {
-        //boost fullness
-        fullness += valueToAdd;
-        if (fullness > 100) { fullness = 100; }
         GameController.instance.AddPoints(valueToAdd);
-        //create a ui icon showing a heart 
-        //reset wander and follow
-        foxAI.ExitChase();
         UIManager.instance.CreateFeedbackIcon(foxTransform, FeedbackIconType.happy);
 
+        foxAI.ExitChase();
+        fullness += valueToAdd;
+        if (fullness > 100){ fullness = 100; }
         //movementController.objectTarget = null;
         //movementController.hasTarget = false;
     }
@@ -65,7 +77,7 @@ public class Fox : MonoBehaviour {
 
     private void DecreaseFullness()
     {
-        fullness -= fullnessDecay;
+        fullness -= fullnessDecay * currentNapDecayModifier;
         if (fullness < 1)
         {
             Runaway();
@@ -73,7 +85,7 @@ public class Fox : MonoBehaviour {
         Invoke("DecreaseFullness", foxDecreaseRate);
 
     }
-
+    
     private void Runaway()
     {
         //delete the UI object in the UI controller here
@@ -82,57 +94,6 @@ public class Fox : MonoBehaviour {
         anchorTextReference.SetActive(false);
         Destroy(anchorTextReference);
         GameController.instance.RemoveFox(gameObject);
-
-
-        //lose points
     }
 
-    /*
-   
-	
-	// Update is called once per frame
-	void Update () {
-
-        transform.position = movementController.transform.position;
-
-        if (detectorFood.objectDetected)
-        {
-            movementController.whichState = Movement.BehaviorState.MoveTowardsFood;
-            movementController.hasTarget = true;
-            movementController.objectTarget = detectorFood.targetObject;
-        }
-        else
-        {
-            movementController.whichState = Movement.BehaviorState.Wander;
-            movementController.hasTarget = false;
-            //remove target from controller
-            movementController.objectTarget = null;
-
-        }
-    }
-    
-
-    private void Decreasefullness()
-    {
-        fullness -= fullnessDecay;
-        if (fullness < 1)
-        {
-            Runaway();
-        }
-        Invoke("Decreasefullness", 1f);
-       
-    }
-
- 
-    */
-
-
-    /*
-    //if the fox has left food radius, pick a new waypoint
-    public void OnCollisionExitChild()
-    {
-        print("Exiting food detection, getting new waypoint");
-        movementController.GetRandomWaypoint();
-    }
-    */
 }

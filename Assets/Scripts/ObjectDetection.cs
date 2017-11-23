@@ -11,41 +11,21 @@ public class ObjectDetection : MonoBehaviour {
 
     public FoxAI foxAIController;
 
-
 	// Use this for initialization
 	void Start () {
         foxAIController = GetComponentInParent<FoxAI>();
-
     }
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
     void OnTriggerEnter(Collider other)
     {
         //if notices the fox, don't do anything
-
-        
             if (other.tag == tagToDetect)
             {
                 objectDetected = true;
                 targetObject = other.transform;
                 foxAIController.EnterChase();
             }
-      
-        /*
-        if (other.tag == tagToDetect)
-        {
-            objectDetected = true;
-            targetObject = other.transform;
-            foxAIController.EnterChase();
-        }
-       */
-
     }
-
     void OnTriggerExit(Collider other)
     {
         if (other.tag == tagToDetect)
@@ -57,5 +37,5 @@ public class ObjectDetection : MonoBehaviour {
         }
 
     }
-    
+
 }

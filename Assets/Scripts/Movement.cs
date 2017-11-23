@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Movement : MonoBehaviour {
 
-    public float moveSpeed;
-    public float rotationSpeed;
     private FoxAI foxAI;
+    public NavMeshAgent navMesh; 
 
+    //variables for the waypoint system
     public Transform currentWaypoint;
     public Transform randomWayPoint;
     Vector3 targetPosition;
@@ -16,45 +17,66 @@ public class Movement : MonoBehaviour {
     public float maxZ;
     public float minZ;
 
-    private void Start()
+    //variables for transform
+    private float originalYPos;
+    private float originalZRotation;
+    public float nappingYPos;
+
+
+    private void Awake()
     {
         foxAI = GetComponentInParent<FoxAI>();
+        navMesh = GetComponent<NavMeshAgent>();
+
+    }
+    private void Start()
+    {
         currentWaypoint = randomWayPoint;
-        GetWaypoint();
-    }
-    public void GetWaypoint()
-    {
-        currentWaypoint.position = new Vector3(Random.Range(minX, maxX), 0f, Random.Range(minZ, maxZ));
+        GetRandomWaypoint();
     }
 
-    public void MovingTowardsPoint()
+    public void GetRandomWaypoint()
     {
-        if (currentWaypoint != null)
+        randomWayPoint.position = new Vector3(Random.Range(minX, maxX), 0f, Random.Range(minZ, maxZ));
+    }
+
+    public void Move(float moveSpeed)
+    {
+
+        /*
+        //todo refactor the move code at some point, try and get all the conditions in the Fox AI and hae this just move it, maybe have a function: Move(movespeed, bool rotate?)
+        if (foxAI.aiState == FoxAI.States.chase) { chaseSpeedModifier = chaseSpeedMultiplier; }
+        else if (foxAI.aiState == FoxAI.States.wandering) { chaseSpeedModifier = 1; }
+        else if (foxAI.aiState == FoxAI.States.NAP) { chaseSpeedModifier = 0; }
+        */
+        if (foxAI.aiState == FoxAI.States.chase && ReachedLocation())
         {
-            //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(waypoint.position - transform.position), rotationSpeed * Time.deltaTime);
-            transform.position = Vector3.MoveTowards(new Vector3(transform.position.x, 0f, transform.position.z), currentWaypoint.position, moveSpeed * Time.deltaTime);
-            targetPosition = new Vector3(currentWaypoint.position.x, this.transform.position.y, currentWaypoint.position.z);
-            transform.LookAt(targetPosition);
-            //transform.LookAt(currentWaypoint);
+            navMesh.speed = moveSpeed;
+            navMesh.updateRotation = false;
+        }
+        else
+        {
+            navMesh.speed = moveSpeed;
+            navMesh.updateRotation = true;
+            navMesh.SetDestination(currentWaypoint.transform.position);
         }
 
-        if(foxAI.aiState == FoxAI.States.wandering)
-        {
-            if ((transform.position - currentWaypoint.position).magnitude < 3)
-            {
-                print("Arrived at point");
-                GetWaypoint();
-            }
-        }
-      
     }
 
-    
+    public bool ReachedLocation()
+    {
+        //sets everything to 0 location to ensure that the distance is caluaculated on two axis rather than 3 (which leads to inaccuratacies) 
+
+        Vector3 currentVector = transform.position; currentVector.y = 0;
+        Vector3 targetVector = currentWaypoint.position; targetVector.y = 0;
+        return Vector3.Distance(currentVector, targetVector) < 0.5f;
+    }
 
     public void ResetWandering()
     {
+        print("Resetting waypoint");
         currentWaypoint = randomWayPoint;
-        currentWaypoint.position = new Vector3(Random.Range(minX, maxX), 0f, Random.Range(minZ, maxZ));
+        GetRandomWaypoint();
     }
 
 }

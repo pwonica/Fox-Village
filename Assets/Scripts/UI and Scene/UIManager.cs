@@ -70,6 +70,11 @@ public class UIManager : MonoBehaviour {
         GameObject.Destroy(rectScrollObject);
     }
 
+    public void CreateDraggableObject(GameObject objectToCreate)
+    {
+
+    }
+
     public void CreateFeedbackIcon(Transform whichTransform, FeedbackIconType whichIconType)
     {
         GameObject objectToCreate = Instantiate(uiFeedbackIcon) as GameObject;

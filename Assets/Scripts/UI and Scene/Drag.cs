@@ -78,34 +78,6 @@ public class Drag : MonoBehaviour {
         originalLocationSet = false;
     }
 
-    /*
-    void OnMouseDown()
-    {
-        Vector3 mouse = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Input.mousePosition.z);
-        offset = gameObject.transform.position - Camera.main.ScreenToWorldPoint(mouse);
-    }
 
-    /**
-     * Mouse is dragged
-     */
-
-    /*
-void OnMouseDrag()
-{
-    Vector3 curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Input.mousePosition.z);
-    Vector3 curPosition = Camera.main.ScreenToWorldPoint(curScreenPoint) + offset;
-    curPosition.y = 2f;
-    transform.position = curPosition;
-}
-
-/*
-private void OnMouseDrag()
-{
-    Vector3 mousePosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, distance);
-    Vector3 objPosition = Camera.main.ScreenToWorldPoint(mousePosition);
-
-    transform.position = objPosition;
-}
-*/
 
 }

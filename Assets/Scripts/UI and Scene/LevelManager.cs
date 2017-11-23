@@ -18,19 +18,20 @@ public class LevelManager : MonoBehaviour {
 
 	}
 
-
+    //todo update this to Scene Manager usage
 	public void LoadLevel(string name){
 		Debug.Log ("New Level load: " + name);
-		Application.LoadLevel (name);
+		//Application.LoadLevel (name);
+        
 	}
 
 	public void QuitRequest(){
 		Debug.Log ("Quit requested");
-		Application.Quit ();
+		//Application.Quit ();
 	}
 
 	public void LoadNextLevel(){
-		Application.LoadLevel (Application.loadedLevel + 1);
+		//Application.LoadLevel (Application.loadedLevel + 1);
 
 	}
 
