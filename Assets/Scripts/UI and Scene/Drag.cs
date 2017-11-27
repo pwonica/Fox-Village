@@ -7,7 +7,8 @@ public class Drag : MonoBehaviour {
     private Vector3 screenPoint;
     private Vector3 offset;
     public float returnDistanceOffset;
-    public GameObject uiObject;                                 //object used to just display it     
+    public GameObject uiObject;                                 //object used to just display it 
+    public BtnDrag uiButton;                                 //reference to the UI button that it's connected to
     public GameObject objectToCreatePfab;                       //object that's created 
     private float yOriginal;
     public float yOffset;
@@ -19,7 +20,7 @@ public class Drag : MonoBehaviour {
 
     private bool originalLocationSet;
     private Vector3 originalLocation;
-    private Vector3 uiLocation;
+    public Vector3 uiLocation;
 
 
 
@@ -30,6 +31,41 @@ public class Drag : MonoBehaviour {
         uiLocation = transform.position;
     }
 
+
+
+    public void Update()
+    {
+        if (Input.GetMouseButtonUp(0))
+        {
+            CreateObject();
+        }
+        else
+        {
+            MoveBasedOnMouse();
+        }
+
+    }
+
+    private void MoveBasedOnMouse()
+    {
+        //move based on 
+        Plane plane = new Plane(Vector3.up, new Vector3(0, yOffset, 0));
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        float distance;
+        if (plane.Raycast(ray, out distance))
+        {
+            transform.position = ray.GetPoint(distance);
+        }
+
+        if (!originalLocationSet)
+        {
+            originalLocation = transform.position;
+            originalLocation.y = yOffset;
+            originalLocationSet = true;
+        }
+    }
+
+    /*
     private void OnMouseDrag()
     {
         //move based on 
@@ -50,32 +86,27 @@ public class Drag : MonoBehaviour {
         
           
     }
-
+    */
 
     //check if it's at it's original point and then return to the element, if not, then drop in place
-    private void OnMouseUp()
+    private void CreateObject()
     {
         //if it's not within the range of the origin point, then reduce 
         if (!((transform.position - originalLocation).magnitude < returnDistanceOffset))
         {
-            print("Creating new objecT");
+            print("Dropping food in world");
             Instantiate(objectToCreatePfab, transform.position, Quaternion.identity);
             transform.position = uiLocation;
+            uiButton.isDragging = false;
+            Destroy(gameObject);
         }
-
-
-        ResetPosition();
-
-        //if it's near the original collision area, display an X icon above it to indicate you're deleting the item
-
-        //if it's not near the collision area, it's in the world space, create an object within the area and set it in 
+        ResetDragButton();
     }
 
-    private void ResetPosition()
+    private void ResetDragButton()
     {
-        print("Returning to original location");
-        transform.position = uiLocation;
-        originalLocationSet = false;
+        uiButton.isDragging = false;
+        Destroy(gameObject);
     }
 
 

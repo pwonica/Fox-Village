@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+
 
 public class CameraPan : MonoBehaviour {
 
@@ -13,6 +15,7 @@ public class CameraPan : MonoBehaviour {
     private Camera cam;
     private Vector3 lastPanPosition;                                        //last position of user's finger/mouse in last frame when panning
     private int panFingerId; // Touch mode only                             //ID of which finger used to track 
+    private bool isInTouch;
 
     void Awake()
     {
@@ -49,14 +52,23 @@ public class CameraPan : MonoBehaviour {
     void HandleMouse()
     {
         //on mouse down, capture its position, else if mouse is still down, pan camera
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !IsPointerOverUIObject())
         {
             lastPanPosition = Input.mousePosition;
+            isInTouch = true;
         }
-        else if (Input.GetMouseButton(0))
+        else if (Input.GetMouseButton(0) && !IsPointerOverUIObject())
         {
-            PanCamera(Input.mousePosition);
+            if (isInTouch == true)
+            {
+                PanCamera(Input.mousePosition);
 
+            }
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            //release touch
+            isInTouch = false;
         }
     }
 
@@ -87,6 +99,18 @@ public class CameraPan : MonoBehaviour {
         //store the position
         lastPanPosition = newPanPosition;
 
+    }
+
+ 
+
+
+    private bool IsPointerOverUIObject()
+    {
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        return results.Count > 0;
     }
 
 

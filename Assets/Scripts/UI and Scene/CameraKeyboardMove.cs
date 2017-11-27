@@ -41,4 +41,24 @@ public class CameraKeyboardMove : MonoBehaviour
         pos.z = Mathf.Clamp(transform.position.z, BoundsZ[0], BoundsZ[1]);
         transform.position = pos;
     }
+
+    public void PanCamera(string whichDirection)
+    {
+        switch (whichDirection)
+        {
+            case "left":
+                transform.position += Vector3.left * speed * Time.deltaTime;
+                break;
+            case "right":
+                transform.position += Vector3.right * speed * Time.deltaTime;
+                break;
+            case "up":
+                transform.position += Vector3.forward * speed * Time.deltaTime;
+                break;
+            case "down":
+                transform.position += Vector3.back * speed * Time.deltaTime;
+                break;
+        }
+        CheckBounds();
+    }
 }

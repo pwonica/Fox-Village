@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+
 
 public class UIManager : MonoBehaviour {
 
@@ -15,10 +17,9 @@ public class UIManager : MonoBehaviour {
     public Transform foxRectScroll;
     private List<GameObject> foxNameList = new List<GameObject>();
 
-
-
     public Text txtPoints;
 
+    //activate the static instance of this object
     private void Awake()
     {
         if (instance == null)
@@ -31,21 +32,14 @@ public class UIManager : MonoBehaviour {
         }
 
         DontDestroyOnLoad(gameObject);
+        canvas = FindObjectOfType<Canvas>();
     }
 
     // Use this for initialization
     void Start () {
-        canvas = FindObjectOfType<Canvas>();
-
         UpdatePoints();
-
     }
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
     public void UpdatePoints()
     {
         txtPoints.text = GameController.instance.points.ToString();
@@ -59,9 +53,6 @@ public class UIManager : MonoBehaviour {
         objectToCreate.GetComponent<UI_foxInfoRect>().foxObject = foxToReference;
         //create a reference of the display text in the fox in case you want to delete it at a later point
         foxToReference.GetComponent<Fox>().ui_rectScrollNameReference = objectToCreate;
-        //parent it 
-
-        //create a reference
     }
 
     public void RemoveNameInRectScroll (GameObject rectScrollObject)
@@ -72,7 +63,9 @@ public class UIManager : MonoBehaviour {
 
     public void CreateDraggableObject(GameObject objectToCreate)
     {
-
+        Vector3 objectTransform = EventSystem.current.currentSelectedGameObject.transform.position;
+        Instantiate(objectToCreate, objectTransform, Quaternion.identity);
+        objectToCreate.GetComponent<Drag>().uiLocation = objectTransform;
     }
 
     public void CreateFeedbackIcon(Transform whichTransform, FeedbackIconType whichIconType)
@@ -81,8 +74,8 @@ public class UIManager : MonoBehaviour {
         RectTransform uiReference = objectToCreate.GetComponent<RectTransform>();
         objectToCreate.GetComponent<UI_floatingIcon>().whichIcon = whichIconType;
 
-        //objectToCreate.transform.SetParent(canvas.transform, false);
-        objectToCreate.GetComponent<RectTransform>().localScale = new Vector3(0.15f, 0.15f, 1);
+        //todo Can I get the feedback icon to spawn based on the scal
+        objectToCreate.GetComponent<RectTransform>().localScale = new Vector3(0.5f, 0.5f, 1);
         
         //the below is basically a lot of math that conerts the position of the transform provided to a canvas RectTransform position and then assigns it
         RectTransform CanvasRect = canvas.GetComponent<RectTransform>();

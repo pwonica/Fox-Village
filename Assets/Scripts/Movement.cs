@@ -66,7 +66,6 @@ public class Movement : MonoBehaviour {
     public bool ReachedLocation()
     {
         //sets everything to 0 location to ensure that the distance is caluaculated on two axis rather than 3 (which leads to inaccuratacies) 
-
         Vector3 currentVector = transform.position; currentVector.y = 0;
         Vector3 targetVector = currentWaypoint.position; targetVector.y = 0;
         return Vector3.Distance(currentVector, targetVector) < 0.5f;

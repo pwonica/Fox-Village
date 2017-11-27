@@ -15,6 +15,22 @@ public class ObjectDetection : MonoBehaviour {
 	void Start () {
         foxAIController = GetComponentInParent<FoxAI>();
     }
+    /*
+    public bool IsObjectPresent()
+    {
+        BoxCollider detectorCollider, objectCollider;
+        detectorCollider = GetComponent<BoxCollider>();
+
+
+        bool isPresent = false;
+        if (detectorCollider.bounds.Intersects(objectCollider.bounds))
+        {
+
+        }
+        return isPresent;
+    }
+    */
+    //todo it might be useful to refactor this system; whenever triggers enter, add to a list, when exit, remove from list. base choices on that list
 	
     void OnTriggerEnter(Collider other)
     {

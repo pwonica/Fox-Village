@@ -79,7 +79,15 @@ public class FoxAI : MonoBehaviour
                 }
                 break;
             case States.chase:
-                //stay stationary
+                //if the current way point is gone (ex: it's been eaten, then exit (find a new waypoint or wander)
+                
+                if (movementController.currentWaypoint == null)
+                {
+                    print("Current waypoint is null, exiting chase mode");
+                    ExitChase();
+
+                }
+                
                 if (movementController.ReachedLocation())
                 {
                     print("Reached location");
@@ -146,8 +154,9 @@ public class FoxAI : MonoBehaviour
     public void EnterChase()
     {
         print("Entering chase");
-        aiState = States.chase;
+        //assign the waypoint and then enter chase; if done the other way, will throw error b/c chase requires active waypoint
         movementController.currentWaypoint = detectorFood.targetObject;
+        aiState = States.chase;
         //assign the waypoint to the object detected
     }
 
