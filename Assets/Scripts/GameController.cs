@@ -10,6 +10,12 @@ public class GameController : MonoBehaviour {
     public int foxRemovePoints;
     public int hungryDecreaseRate;                              //how many points are removed per hungry fox
     public int foxPurchaseCost;
+    public int foodPurchaseCost;
+    public int passivePointBoost_fox;
+    public int passivePointBoost_base;
+    public int passivePointBoost_time;
+
+    public float passiveBoostTimer;
 
     public Transform foxSpawnLocation;
     public GameObject pfabFox;
@@ -35,11 +41,21 @@ public class GameController : MonoBehaviour {
     private void Start()
     {
         //AddFox();
+        passiveBoostTimer = passivePointBoost_time;
+
+        //check if there's active save data, if so load from the save data
+
     }
     // Update is called once per frame
     void Update () {
-		
-	}
+
+        if (passiveBoostTimer <= 0)
+        {
+            PassivePointBoost();
+            passiveBoostTimer = passivePointBoost_time;
+        }
+        passiveBoostTimer -= Time.deltaTime;
+    }
 
     public void Save()
     {
@@ -48,16 +64,26 @@ public class GameController : MonoBehaviour {
 
     public void Load()
     {
-        List<string> namesList = SaveManager.LoadGame();
-        print(namesList);
+        SaveManager.LoadGame();
     }
 
+    //at some point, condense the add fox into one single thing
     public void AddFox()
     {
         GameObject foxToCreate = Instantiate(pfabFox, foxSpawnLocation.position, Quaternion.identity);
         foxList.Add(foxToCreate);
+    }
+
+    public void AddFoxFromData(FoxData foxData)
+    {
+        GameObject foxToCreate = Instantiate(pfabFox, foxSpawnLocation.position, Quaternion.identity);
+        Fox fox = foxToCreate.GetComponent<Fox>();
+        fox.foxName = foxData.foxName;
+        print("Creating fox from sava data: " + fox.foxName);
+        foxList.Add(foxToCreate);
 
     }
+
 
     public void PurchaseFox()
     {
@@ -73,6 +99,11 @@ public class GameController : MonoBehaviour {
 
     }
 
+
+    public void PurchaseFood(int itemCost)
+    {
+        SubtractPoints(itemCost);
+    }
     public void RemoveFox(GameObject foxToRemove)
     {
         //placeholder to do other things
@@ -84,12 +115,28 @@ public class GameController : MonoBehaviour {
 
     }
 
+  
+
+    //adds points based on number of foxes that you have
+    //TODO can add stats (ex: you only get points for happy foxes for example)
+    private void PassivePointBoost()
+    {
+        int pointsToAdd = (foxList.Count * passivePointBoost_fox) + passivePointBoost_base;
+        print("Adding points: " + pointsToAdd);
+        AddPoints(pointsToAdd);
+    }
+
     public void AddPoints(int valueToAdd) {
         points += valueToAdd;
         UIManager.instance.UpdatePoints();
     }
     public void SubtractPoints(int valueToReduce) {
         points -= valueToReduce;
+        UIManager.instance.UpdatePoints();
+    }
+    public void SetPoints(int valueToSet)
+    {
+        points = valueToSet;
         UIManager.instance.UpdatePoints();
     }
 

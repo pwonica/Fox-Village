@@ -8,6 +8,7 @@ public class BtnDrag : MonoBehaviour {
 
     public bool isDragging = false;
     public GameObject objectDragging;
+    public int itemCost;
 
 	// Use this for initialization
 	void Start () {
@@ -22,11 +23,14 @@ public class BtnDrag : MonoBehaviour {
             //create at your mouse location
             Vector3 objectTransform = EventSystem.current.currentSelectedGameObject.transform.position;
             objectDragging = Instantiate(objectToCreate, objectTransform, Quaternion.identity);
+            objectToCreate.GetComponent<Drag>().uiButton = this.GetComponent<BtnDrag>();
             objectToCreate.GetComponent<Drag>().uiLocation = objectTransform;
-            objectToCreate.GetComponent<Drag>().uiButton = this;
-            isDragging = true;
-            //attach it to your hold
         }
+    }
+
+    public void ResetDrag()
+    {
+        isDragging = false;
     }
     
 }

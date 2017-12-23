@@ -15,6 +15,7 @@ public class UIManager : MonoBehaviour {
 
     public Transform foxNamesHierachy;
     public Transform foxRectScroll;
+    public Slider uiPassivePointSlider;
     private List<GameObject> foxNameList = new List<GameObject>();
 
     public Text txtPoints;
@@ -38,8 +39,14 @@ public class UIManager : MonoBehaviour {
     // Use this for initialization
     void Start () {
         UpdatePoints();
+        uiPassivePointSlider.maxValue = GameController.instance.passivePointBoost_time;
     }
-	
+
+    private void Update()
+    {
+        uiPassivePointSlider.value = GameController.instance.passiveBoostTimer;
+    }
+
     public void UpdatePoints()
     {
         txtPoints.text = GameController.instance.points.ToString();

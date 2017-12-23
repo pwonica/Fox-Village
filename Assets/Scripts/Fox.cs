@@ -16,7 +16,7 @@ public class Fox : MonoBehaviour {
 
     public string foxName;
     public float fullness = 70;
-    public float foxDecreaseRate;
+    public float foxFullnessDecreaseRate;                                     //how often the fox will decrease it's fullness
 
     //unique fox characteristics
     public float moveSpeed;
@@ -48,7 +48,7 @@ public class Fox : MonoBehaviour {
     }
     private void Start()
     {
-        foxName = NameGenerator.instance.GetName();
+        //foxName = NameGenerator.instance.GetName();
         Invoke("DecreaseFullness", 0f);
         anchorTextReference = UIManager.instance.CreateAnchoredText(foxName, foxModel);
         UIManager.instance.AddNameInRectScroll(gameObject);
@@ -58,12 +58,17 @@ public class Fox : MonoBehaviour {
     {
         averageNapApart = Random.Range(averageNapApart_min, averageNapApart_max);
         averageNapTime = Random.Range(averageNapTime_min, averageNapTime_max);
+        foxName = NameGenerator.instance.GetName();
+        name = foxName;
     }
 
+    private void AssignSaveData()
+    {
+
+    }
 
     public void EatFood(int valueToAdd)
     {
-        GameController.instance.AddPoints(valueToAdd);
         UIManager.instance.CreateFeedbackIcon(foxTransform, FeedbackIconType.happy);
 
         foxAI.ExitChase();
@@ -82,7 +87,7 @@ public class Fox : MonoBehaviour {
         {
             Runaway();
         }
-        Invoke("DecreaseFullness", foxDecreaseRate);
+        Invoke("DecreaseFullness", foxFullnessDecreaseRate);
 
     }
     

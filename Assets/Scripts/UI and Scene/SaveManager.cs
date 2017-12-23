@@ -14,13 +14,20 @@ public class SaveManager : MonoBehaviour {
         //saves the player file
         FileStream stream = new FileStream(Application.persistentDataPath + "/player.sav", FileMode.Create);
 
-        GameData data = new GameData(foxList, 100);
+        print("Starting process of saving game");
+        foreach (GameObject fox in foxList)
+        {
+            print(fox.GetComponent<Fox>().foxName);
+        }
+
+        GameData data = new GameData(foxList, GameController.instance.points);
+        print("Saving file with points: " + data.points);
         bf.Serialize(stream, data);
         stream.Close();
 
     }
 
-    public static List<String> LoadGame()
+    public static void LoadGame()
     {
         if (File.Exists(Application.persistentDataPath + "/player.sav"))
         {
@@ -29,32 +36,75 @@ public class SaveManager : MonoBehaviour {
 
             //doesn't actually know what game object it is so you need to cast it as the object
             GameData data = bf.Deserialize(stream) as GameData;
+
+            GameController.instance.SetPoints(data.points);
+
+            //transfers fox data to a new list so the source isn't modified and then creates foxes based on that temp list 
+            List<FoxData> foxesToAddListSource = new List<FoxData>();
+            foxesToAddListSource = data.foxDataList;
+            LoadFoxes(foxesToAddListSource);
+           
             stream.Close();
-            return data.foxNames;
+            print("Loading game finished");
         }
         else
         {
             Debug.LogError("File does not exist");
-            return new List<string>(); 
         }
     }
 
+    //FYI, this needs to be made static or else I need to call an instance of save manager to use it
+    private static void LoadFoxes(List<FoxData> foxSource)
+    {
+        print("Loading foxes from save data");
+        foreach (FoxData foxData in foxSource.ToArray())
+        {
+            GameController.instance.AddFoxFromData(foxData);
+            foxSource.Remove(foxData);
+        }
+    }
 
 }
+
+
 
 [Serializable]
 public class GameData
 {
-    public List<String> foxNames;
+    public List<FoxData> foxDataList = new List<FoxData>();
     public int points;
 
     public GameData(List<GameObject> foxList, int pointsToAdd)
     {
+        points = pointsToAdd;
+
+        foreach (GameObject fox in foxList)
+        {
+            FoxData foxToAdd = new FoxData(fox);
+            foxDataList.Add(foxToAdd);
+        }
+
+        //apparently I can't have things in here? I can only use the constructor? 
+        /*
         foreach(GameObject fox in foxList)
         {
-            foxNames.Add(fox.GetComponent<Fox>().foxName);
+            //ERROR IN GETTING NAMES
+            String name = fox.GetComponent<Fox>().foxName;
+            foxNames.Add(name);
         }
 
         points = pointsToAdd;
+        */
+    }
+}
+
+[Serializable]
+public class FoxData
+{
+    public string foxName;
+
+    public FoxData(GameObject fox)
+    {
+        foxName = fox.GetComponent<Fox>().foxName;
     }
 }

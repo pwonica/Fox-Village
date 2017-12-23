@@ -5,6 +5,7 @@ using UnityEngine;
 public class Food : MonoBehaviour {
 
     public int pointsValue = 10;
+    public int itemCost;
 
 	// Use this for initialization
 	void Start () {

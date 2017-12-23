@@ -277,7 +277,7 @@ MonoBehaviour:
   ui_rectScrollNameReference: {fileID: 0}
   foxName: 
   fullness: 50
-  foxDecreaseRate: 2
+  foxFullnessDecreaseRate: 1
   moveSpeed: 0
   averageNapTime: 0
   averageNapApart: 0

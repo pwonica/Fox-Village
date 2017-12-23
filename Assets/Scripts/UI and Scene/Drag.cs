@@ -13,6 +13,7 @@ public class Drag : MonoBehaviour {
     private float yOriginal;
     public float yOffset;
 
+    private bool isMobile = false;
     private bool isMouseDrag = false;
     private bool canUse = true;
     private float cooldownTimer;
@@ -23,7 +24,11 @@ public class Drag : MonoBehaviour {
     public Vector3 uiLocation;
 
 
-
+    private void Awake()
+    {
+        if (Input.touchSupported && Application.platform != RuntimePlatform.WebGLPlayer) { isMobile = true; print("Is on a mobile device"); }
+        else { isMobile = false; print("Is on desktop device"); }
+    }
 
     private void Start()
     {
@@ -35,22 +40,53 @@ public class Drag : MonoBehaviour {
 
     public void Update()
     {
-        if (Input.GetMouseButtonUp(0))
+
+        //touch
+        if (Input.touchSupported && Application.platform != RuntimePlatform.WebGLPlayer)
         {
-            CreateObject();
+
+            //HandleTouch();
+            if (Input.touchCount > 0)
+            {
+                DragObject();
+            }
+            else
+            {
+                CreateObject();
+            }
+
         }
-        else
-        {
-            MoveBasedOnMouse();
+        //mouse
+        else {
+            if (Input.GetMouseButtonUp(0))
+            {
+                CreateObject();
+            }
+            else
+            {
+                DragObject();
+            }
         }
+
+
+
 
     }
 
-    private void MoveBasedOnMouse()
+
+    private void DragObject()
     {
         //move based on 
         Plane plane = new Plane(Vector3.up, new Vector3(0, yOffset, 0));
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray;
+        //get the correct location based on device
+        if (isMobile)
+        {
+            Touch touch = Input.GetTouch(0);
+            ray = Camera.main.ScreenPointToRay(touch.position);
+        }
+        else { ray = Camera.main.ScreenPointToRay(Input.mousePosition); }
+
         float distance;
         if (plane.Raycast(ray, out distance))
         {
@@ -64,29 +100,9 @@ public class Drag : MonoBehaviour {
             originalLocationSet = true;
         }
     }
+    
 
-    /*
-    private void OnMouseDrag()
-    {
-        //move based on 
-        Plane plane = new Plane(Vector3.up, new Vector3(0, yOffset, 0));
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        float distance;
-        if (plane.Raycast(ray, out distance))
-        {
-            transform.position = ray.GetPoint(distance);
-        }
 
-        if (!originalLocationSet)
-        {
-            originalLocation = transform.position;
-            originalLocation.y = yOffset;
-            originalLocationSet = true;
-        }
-        
-          
-    }
-    */
 
     //check if it's at it's original point and then return to the element, if not, then drop in place
     private void CreateObject()
@@ -95,16 +111,17 @@ public class Drag : MonoBehaviour {
         if (!((transform.position - originalLocation).magnitude < returnDistanceOffset))
         {
             print("Dropping food in world");
+            GameController.instance.PurchaseFood(10);
             Instantiate(objectToCreatePfab, transform.position, Quaternion.identity);
             transform.position = uiLocation;
-            uiButton.isDragging = false;
             Destroy(gameObject);
         }
-        ResetDragButton();
+        //ResetDragButton();
     }
 
     private void ResetDragButton()
     {
+        print(uiButton.isDragging);
         uiButton.isDragging = false;
         Destroy(gameObject);
     }

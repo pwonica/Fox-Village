@@ -14,8 +14,14 @@ public class CameraPan : MonoBehaviour {
 
     private Camera cam;
     private Vector3 lastPanPosition;                                        //last position of user's finger/mouse in last frame when panning
-    private int panFingerId; // Touch mode only                             //ID of which finger used to track 
+
+    //touch mode variables
+    private int panFingerId;                                                //ID of which finger used to track 
     private bool isInTouch;
+    private bool isTouchDevice;
+    private bool wasZoomingLastFrame; 
+    private Vector2[] lastZoomPositions; 
+
 
     void Awake()
     {
@@ -25,8 +31,9 @@ public class CameraPan : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-		
-	}
+        if (Input.touchSupported && Application.platform != RuntimePlatform.WebGLPlayer) { isTouchDevice = true; }
+        else { isTouchDevice = false; }
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -42,11 +49,59 @@ public class CameraPan : MonoBehaviour {
 
         if (Input.touchSupported && Application.platform != RuntimePlatform.WebGLPlayer) { HandleTouch(); }
         else { HandleMouse(); }
+
 	}
 
     void HandleTouch()
     {
+        if (Input.touchCount > 0)
+        {
+            wasZoomingLastFrame = false;
 
+            // If the touch began, capture its position and its finger ID.
+            // Otherwise, if the finger ID of the touch doesn't match, skip it.
+            Touch touch = Input.GetTouch(0);
+            if (touch.phase == TouchPhase.Began && !IsPointerOverUIObject())
+            {
+                lastPanPosition = touch.position;
+                panFingerId = touch.fingerId;
+            }
+            else if (touch.fingerId == panFingerId && touch.phase == TouchPhase.Moved && !IsPointerOverUIObject())
+            {
+                PanCamera(touch.position);
+            }
+        }
+        else
+        {
+            wasZoomingLastFrame = false;
+        }
+
+        /*
+        switch (Input.touchCount)
+        {
+            case 1: // Panning
+                wasZoomingLastFrame = false;
+
+                // If the touch began, capture its position and its finger ID.
+                // Otherwise, if the finger ID of the touch doesn't match, skip it.
+                Touch touch = Input.GetTouch(0);
+                if (touch.phase == TouchPhase.Began)
+                {
+                    lastPanPosition = touch.position;
+                    panFingerId = touch.fingerId;
+                }
+                else if (touch.fingerId == panFingerId && touch.phase == TouchPhase.Moved)
+                {
+                    PanCamera(touch.position);
+                }
+                break;
+
+            //means that 0 fingers are present (or more than 2)
+            default:
+                wasZoomingLastFrame = false;
+                break;
+        }
+        */
     }
 
     void HandleMouse()
@@ -72,14 +127,19 @@ public class CameraPan : MonoBehaviour {
         }
     }
 
+    /*
     private bool OnUILayer()
     {
         RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = null;
+        if (isTouchDevice) { Camera.main.ScreenPointToRay(Input.GetTouch(0).position); }
+        else { Camera.main.ScreenPointToRay(Input.mousePosition); }
+
         bool isOnLayer = !Physics.Raycast(ray, out hit, UIlayer);
         print("Is on layer: " + isOnLayer);
         return isOnLayer;
     }
+    */
 
     void PanCamera(Vector3 newPanPosition)
     {
@@ -102,12 +162,14 @@ public class CameraPan : MonoBehaviour {
     }
 
  
-
-
     private bool IsPointerOverUIObject()
     {
         PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
-        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        //checks based on if mobile device or not
+        if (isTouchDevice) { eventDataCurrentPosition.position = new Vector2(Input.GetTouch(0).position.x, Input.GetTouch(0).position.x); }
+        else { eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y); }
+
+
         List<RaycastResult> results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
         return results.Count > 0;
