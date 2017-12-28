@@ -11,7 +11,10 @@ public class UIManager : MonoBehaviour {
     public GameObject uiFeedbackIcon;
     public GameObject pfab_uiAnchoredText;
     public GameObject pfab_uiFoxInfoRect;
+    public GameObject pfab_uiFoxInfoPopup;
     private Canvas canvas;
+
+    private bool isPopupActive = false;
 
     public Transform foxNamesHierachy;
     public Transform foxRectScroll;
@@ -104,4 +107,25 @@ public class UIManager : MonoBehaviour {
 
         return objectToCreate;
     }
+
+    //use the fox data to 
+    public void CreateFoxInfoPopup(FoxData foxdata)
+    {
+        GameObject objectToCreate = Instantiate(pfab_uiFoxInfoPopup) as GameObject;
+        objectToCreate.transform.SetParent(canvas.transform, false);
+        isPopupActive = true;
+    }
+
+    //close the most active popup window 
+    public void ClosePopup(GameObject whichObject)
+    {
+        isPopupActive = false;
+        Destroy(whichObject);
+    }
+
+    public void ChangeHoverOverState(GameObject whichObject, bool whichState)
+    {
+        whichObject.SetActive(whichState);
+    }
+
 }

@@ -67,10 +67,6 @@ public class Drag : MonoBehaviour {
                 DragObject();
             }
         }
-
-
-
-
     }
 
 
@@ -111,8 +107,9 @@ public class Drag : MonoBehaviour {
         if (!((transform.position - originalLocation).magnitude < returnDistanceOffset))
         {
             print("Dropping food in world");
-            GameController.instance.PurchaseFood(10);
             Instantiate(objectToCreatePfab, transform.position, Quaternion.identity);
+            GameController.instance.PurchaseFood(objectToCreatePfab.GetComponent<Food>().itemCost);
+
             transform.position = uiLocation;
             Destroy(gameObject);
         }

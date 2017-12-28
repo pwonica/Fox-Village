@@ -35,6 +35,7 @@ public class GameController : MonoBehaviour {
         }
 
         DontDestroyOnLoad(gameObject);
+
     }
 
 
@@ -43,18 +44,29 @@ public class GameController : MonoBehaviour {
         //AddFox();
         passiveBoostTimer = passivePointBoost_time;
 
+        /*
+        //if there is save data, load the foxes first
+        if (SaveManager.DoesSaveDataExist())
+        {
+            SaveManager.LoadGame();
+        }
+        
+    */
         //check if there's active save data, if so load from the save data
 
     }
     // Update is called once per frame
     void Update () {
 
+        /*
         if (passiveBoostTimer <= 0)
         {
             PassivePointBoost();
             passiveBoostTimer = passivePointBoost_time;
         }
         passiveBoostTimer -= Time.deltaTime;
+        */
+
     }
 
     public void Save()
@@ -71,6 +83,8 @@ public class GameController : MonoBehaviour {
     public void AddFox()
     {
         GameObject foxToCreate = Instantiate(pfabFox, foxSpawnLocation.position, Quaternion.identity);
+        foxToCreate.GetComponent<Fox>().RandomizeFox();
+        foxToCreate.name = foxToCreate.GetComponent<Fox>().foxName;
         foxList.Add(foxToCreate);
     }
 
@@ -78,9 +92,20 @@ public class GameController : MonoBehaviour {
     {
         GameObject foxToCreate = Instantiate(pfabFox, foxSpawnLocation.position, Quaternion.identity);
         Fox fox = foxToCreate.GetComponent<Fox>();
+
+        //assign values to the fox based on the data object created 
         fox.foxName = foxData.foxName;
+        fox.averageNapApart = foxData.napFrequency;
+        fox.averageNapTime = foxData.napTime;
+        fox.fullnessDecay = foxData.fullnessDecay;
+        fox.fullness = foxData.fullness;
+        fox.moveSpeed = foxData.moveSpeed;
+
+        foxToCreate.name = foxData.foxName;
         print("Creating fox from sava data: " + fox.foxName);
         foxList.Add(foxToCreate);
+        NameGenerator.instance.RemoveName(fox.foxName);
+        //TODO remove fox name from the main list 
 
     }
 
@@ -111,8 +136,6 @@ public class GameController : MonoBehaviour {
         GameObject.Destroy(foxToRemove);
         SubtractPoints(foxRemovePoints);
         print("You lost a fox!");
-        
-
     }
 
   

@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 114230269190910384}
   m_Layer: 0
   m_Name: Fox
-  m_TagString: Untagged
+  m_TagString: fox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -41,7 +41,9 @@ GameObject:
   - component: {fileID: 114892760764478360}
   - component: {fileID: 65658967594180040}
   - component: {fileID: 195229971849109106}
-  m_Layer: 5
+  - component: {fileID: 114480055140615686}
+  - component: {fileID: 114463328857038740}
+  m_Layer: 9
   m_Name: Collision
   m_TagString: fox
   m_Icon: {fileID: 0}
@@ -58,7 +60,7 @@ GameObject:
   - component: {fileID: 4106603612534584}
   - component: {fileID: 23324169974707430}
   - component: {fileID: 33293640998925306}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: FoxModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -176,6 +178,7 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -191,6 +194,7 @@ MeshRenderer:
   m_PreserveUVs: 1
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -277,17 +281,21 @@ MonoBehaviour:
   ui_rectScrollNameReference: {fileID: 0}
   foxName: 
   fullness: 50
-  foxFullnessDecreaseRate: 1
   moveSpeed: 0
   averageNapTime: 0
-  averageNapApart: 0
   fullnessDecay: 2
+  fullnessDecreaseFrequency: 1
+  averageNapApart: 0
   napDecayModifier: 0.5
   currentNapDecayModifier: 1
   averageNapTime_min: 5
   averageNapTime_max: 15
-  averageNapApart_min: 30
-  averageNapApart_max: 60
+  averageFullnessDecay_min: 1
+  averageFullnessDecay_max: 4
+  moveSpeed_min: 1
+  moveSpeed_max: 5
+  averageNapApart_min: 15
+  averageNapApart_max: 45
 --- !u!114 &114236132439145596
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -303,6 +311,47 @@ MonoBehaviour:
   moveSpeed: 3
   chaseSpeedMultiplier: 2
   aiState: 0
+--- !u!114 &114463328857038740
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1370300740388864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f4fcb0c9dd7e454da8c1a6234a7844c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114480055140615686
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1370300740388864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1862395651, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 114230269190910384}
+          m_MethodName: TestFunction
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 1
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  delegates: []
 --- !u!114 &114517046002831090
 MonoBehaviour:
   m_ObjectHideFlags: 1

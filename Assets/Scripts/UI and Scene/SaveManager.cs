@@ -27,6 +27,13 @@ public class SaveManager : MonoBehaviour {
 
     }
 
+    public static bool DoesSaveDataExist()
+    {
+        if (File.Exists(Application.persistentDataPath + "/player.sav")) { return true; }
+        else { return false; }
+
+    }
+
     public static void LoadGame()
     {
         if (File.Exists(Application.persistentDataPath + "/player.sav"))
@@ -53,8 +60,18 @@ public class SaveManager : MonoBehaviour {
         }
     }
 
-    //FYI, this needs to be made static or else I need to call an instance of save manager to use it
-    private static void LoadFoxes(List<FoxData> foxSource)
+    public static void ClearData()
+    {
+        if (File.Exists(Application.persistentDataPath + "/player.sav"))
+        {
+            File.Delete(Application.persistentDataPath + "/player.sav");
+            print("CAUTION: Save data deleted");
+        }
+    }
+
+
+        //FYI, this needs to be made static or else I need to call an instance of save manager to use it
+        private static void LoadFoxes(List<FoxData> foxSource)
     {
         print("Loading foxes from save data");
         foreach (FoxData foxData in foxSource.ToArray())
@@ -102,9 +119,20 @@ public class GameData
 public class FoxData
 {
     public string foxName;
+    public float moveSpeed;
+    public float napTime;
+    public float napFrequency;
+    public float fullness;
+    public float fullnessDecay;
 
-    public FoxData(GameObject fox)
+    public FoxData(GameObject foxObject)
     {
-        foxName = fox.GetComponent<Fox>().foxName;
+        Fox fox = foxObject.GetComponent<Fox>();
+        foxName = fox.foxName;
+        moveSpeed = fox.moveSpeed;
+        napTime = fox.averageNapTime;
+        napFrequency = fox.averageNapApart;
+        fullness = fox.fullness;
+        fullnessDecay = fox.fullnessDecay;
     }
 }

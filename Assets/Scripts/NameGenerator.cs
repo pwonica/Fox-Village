@@ -38,13 +38,12 @@ public class NameGenerator : MonoBehaviour
         int randomVar = Random.Range(0, foxNameList.Count);
         nameToReturn = foxNameList[randomVar];
         foxNameList.Remove(nameToReturn);
-        print("Removing name " + nameToReturn + ". List now has " + foxNameList.Count);
         return nameToReturn;
     }
 
     public void RemoveName(string nameToRemove)
     {
-
+        foxNameList.Remove(nameToRemove);
     }
 
 

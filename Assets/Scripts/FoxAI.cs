@@ -46,18 +46,15 @@ public class FoxAI : MonoBehaviour
     }
     private void Start()
     {
+        //get the movement speed from the top AI 
+        moveSpeed = foxCharacter.moveSpeed;
         aiState = States.wandering;
         SetNapTimer();
-        
-        //rigidbody = GetComponent<Rigidbody>();
     }
 
     //todo turn the fox ai into a courotuine system
     private void Update()
     {
-        //transform.position = movementController.transform.position - transform.localPosition;
-        //gameObject.transform.position = movementController.transform.position;
-        //transform.position = movementController.transform.position;
         detectorFood.transform.position = movementController.transform.position;
         float currentSpeed; 
         
@@ -83,15 +80,11 @@ public class FoxAI : MonoBehaviour
                 
                 if (movementController.currentWaypoint == null)
                 {
-                    print("Current waypoint is null, exiting chase mode");
                     ExitChase();
-
                 }
                 
                 if (movementController.ReachedLocation())
                 {
-                    print("Reached location");
-
                     movementController.Move(0f);
                 }
                 //move at faster speed
@@ -167,30 +160,6 @@ public class FoxAI : MonoBehaviour
         aiState = States.wandering;
         detectorFood.objectDetected = false;
     }
-
-
-
-    /*
-    private float DetermineSpeed()
-    {
-        float currentSpeed; 
-
-        if (aiState == FoxAI.States.chase) {
-
-            chaseSpeedModifier = chaseSpeedMultiplier;
-        }
-        else if (aiState == FoxAI.States.wandering) { chaseSpeedModifier = 1; }
-        else if (aiState == FoxAI.States.NAP) { chaseSpeedModifier = 0; }                           //nap just sets it to zero
-
-        currentSpeed =  moveSpeed * chaseSpeedModifier;
-
-
-        return currentSpeed;
-    }
-    */
-
-
-
 
 
 }

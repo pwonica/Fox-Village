@@ -1,10 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 
-public class CameraPan : MonoBehaviour {
+public class CameraPan : MonoBehaviour, IBeginDragHandler, IMoveHandler {
 
     private static readonly float PanSpeed = 20f;
     private static readonly float[] BoundsX = new float[] { -10f, 5f };
@@ -27,12 +28,22 @@ public class CameraPan : MonoBehaviour {
     {
         cam = GetComponent<Camera>();
         UIlayer = 1 << UIlayer;
+
+        if (Input.touchSupported && Application.platform != RuntimePlatform.WebGLPlayer)
+        {
+            isTouchDevice = true;
+            print("DEVICE: Touch");
+        }
+        else
+        {
+            isTouchDevice = false;
+            print("DEVICE: Desktop");
+        }
     }
 
     // Use this for initialization
     void Start () {
-        if (Input.touchSupported && Application.platform != RuntimePlatform.WebGLPlayer) { isTouchDevice = true; }
-        else { isTouchDevice = false; }
+
     }
 	
 	// Update is called once per frame
@@ -54,6 +65,7 @@ public class CameraPan : MonoBehaviour {
 
     void HandleTouch()
     {
+        /*
         if (Input.touchCount > 0)
         {
             wasZoomingLastFrame = false;
@@ -61,47 +73,56 @@ public class CameraPan : MonoBehaviour {
             // If the touch began, capture its position and its finger ID.
             // Otherwise, if the finger ID of the touch doesn't match, skip it.
             Touch touch = Input.GetTouch(0);
-            if (touch.phase == TouchPhase.Began && !IsPointerOverUIObject())
+
+            if (touch.phase == TouchPhase.Began && !IsTouchOverUI(touch))
             {
                 lastPanPosition = touch.position;
                 panFingerId = touch.fingerId;
+                print("Moving with touch");
+                
             }
-            else if (touch.fingerId == panFingerId && touch.phase == TouchPhase.Moved && !IsPointerOverUIObject())
+            else if (touch.fingerId == panFingerId && touch.phase == TouchPhase.Moved && !!IsTouchOverUI(touch))
             {
                 PanCamera(touch.position);
+                print("Panning camera");
             }
-        }
-        else
+        }*/
+
+        //HOLY SHIT THIS WORKS CORRECTLY!!!!!!!!! :D
+
+        if (Input.touchCount > 0)
         {
             wasZoomingLastFrame = false;
-        }
 
-        /*
-        switch (Input.touchCount)
-        {
-            case 1: // Panning
-                wasZoomingLastFrame = false;
+            // If the touch began, capture its position and its finger ID.
+            // Otherwise, if the finger ID of the touch doesn't match, skip it.
+            Touch touch = Input.GetTouch(0);
 
-                // If the touch began, capture its position and its finger ID.
-                // Otherwise, if the finger ID of the touch doesn't match, skip it.
-                Touch touch = Input.GetTouch(0);
-                if (touch.phase == TouchPhase.Began)
-                {
-                    lastPanPosition = touch.position;
-                    panFingerId = touch.fingerId;
-                }
-                else if (touch.fingerId == panFingerId && touch.phase == TouchPhase.Moved)
+            if (touch.phase == TouchPhase.Began && !IsTouchOverUI(touch))
+            {
+                lastPanPosition = touch.position;
+                panFingerId = touch.fingerId;
+                print("Moving with touch");
+                isInTouch = true;
+
+            }
+            else if (touch.fingerId == panFingerId && touch.phase == TouchPhase.Moved && !IsTouchOverUI(touch))
+            {
+                if (isInTouch)
                 {
                     PanCamera(touch.position);
+                    print("Panning camera");
                 }
-                break;
 
-            //means that 0 fingers are present (or more than 2)
-            default:
-                wasZoomingLastFrame = false;
-                break;
+            }
+            else if (touch.phase == TouchPhase.Ended){
+                isInTouch = false;
+            }
         }
-        */
+        
+
+
+
     }
 
     void HandleMouse()
@@ -141,6 +162,18 @@ public class CameraPan : MonoBehaviour {
     }
     */
 
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void OnMove(AxisEventData eventData)
+    {
+        throw new NotImplementedException();
+    }
+
+
     void PanCamera(Vector3 newPanPosition)
     {
         //determine how much to moe the camera
@@ -164,16 +197,27 @@ public class CameraPan : MonoBehaviour {
  
     private bool IsPointerOverUIObject()
     {
+
         PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
         //checks based on if mobile device or not
         if (isTouchDevice) { eventDataCurrentPosition.position = new Vector2(Input.GetTouch(0).position.x, Input.GetTouch(0).position.x); }
         else { eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y); }
 
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        return results.Count > 0;
+        
+    }
+
+    private bool IsTouchOverUI(Touch t)
+    {
+        // Referencing this code for GraphicRaycaster https://gist.github.com/stramit/ead7ca1f432f3c0f181f
+        // the ray cast appears to require only eventData.position.
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = new Vector2(t.position.x, t.position.y);
 
         List<RaycastResult> results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
         return results.Count > 0;
     }
-
-
 }

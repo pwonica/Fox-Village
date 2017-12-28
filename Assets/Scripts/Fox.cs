@@ -14,37 +14,41 @@ public class Fox : MonoBehaviour {
     [HideInInspector] public GameObject anchorTextReference;
     [HideInInspector] public GameObject ui_rectScrollNameReference;
 
+    //FOXDATA Variables
     public string foxName;
     public float fullness = 70;
-    public float foxFullnessDecreaseRate;                                     //how often the fox will decrease it's fullness
-
-    //unique fox characteristics
     public float moveSpeed;
     [HideInInspector] public float averageNapTime;
-    [HideInInspector] public float averageNapApart;
     public float fullnessDecay;
 
+
+    //Non-flexbile unique variables 
+    public float fullnessDecreaseFrequency;                                     //how often the fox will decrease it's fullness
+    [HideInInspector] public float averageNapApart;
     [HideInInspector] public float napDecayModifier;                          //modifier that affects hunger during a nap time (ex: 0.5, 0.75 * normal hunger decrease)     
     [HideInInspector] public float currentNapDecayModifier;                   //modifier that switches; normally is 1, but in nap state, changes to nap decay modifier
 
-    //variables for randomizations;
+    //FLEXIBLE variables 
     public float averageNapTime_min;
     public float averageNapTime_max;
+    public float averageFullnessDecay_min;
+    public float averageFullnessDecay_max;
+    public float moveSpeed_min;
+    public float moveSpeed_max;
+
+    //STATIC + random
     public float averageNapApart_min;
     public float averageNapApart_max;
 
 
     private Text txtFoxNameDisplay;
     private GameObject uiFeedbackIcon;
-    //private Canvas canvas;
-    //private Camera cam;
 
     private void Awake()
     {
         //canvas = FindObjectOfType<Canvas>();
         //cam = FindObjectOfType<Camera>();
         foxAI = GetComponent<FoxAI>();
-        RandomizeFox();
     }
     private void Start()
     {
@@ -52,21 +56,20 @@ public class Fox : MonoBehaviour {
         Invoke("DecreaseFullness", 0f);
         anchorTextReference = UIManager.instance.CreateAnchoredText(foxName, foxModel);
         UIManager.instance.AddNameInRectScroll(gameObject);
+
     }
 
-    private void RandomizeFox()
+
+    public void RandomizeFox()
     {
         averageNapApart = Random.Range(averageNapApart_min, averageNapApart_max);
         averageNapTime = Random.Range(averageNapTime_min, averageNapTime_max);
+        fullnessDecay = Random.Range(averageFullnessDecay_min, averageFullnessDecay_max);
+        moveSpeed = Random.Range(moveSpeed_min, moveSpeed_max);
         foxName = NameGenerator.instance.GetName();
         name = foxName;
     }
-
-    private void AssignSaveData()
-    {
-
-    }
-
+    
     public void EatFood(int valueToAdd)
     {
         UIManager.instance.CreateFeedbackIcon(foxTransform, FeedbackIconType.happy);
@@ -87,7 +90,7 @@ public class Fox : MonoBehaviour {
         {
             Runaway();
         }
-        Invoke("DecreaseFullness", foxFullnessDecreaseRate);
+        Invoke("DecreaseFullness", fullnessDecreaseFrequency);
 
     }
     
