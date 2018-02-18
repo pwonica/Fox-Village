@@ -106,7 +106,7 @@ public class Drag : MonoBehaviour {
         //if it's not within the range of the origin point, then reduce 
         if (!((transform.position - originalLocation).magnitude < returnDistanceOffset))
         {
-            print("Dropping food in world");
+            //print("Dropping food in world");
             Instantiate(objectToCreatePfab, transform.position, Quaternion.identity);
             GameController.instance.PurchaseFood(objectToCreatePfab.GetComponent<Food>().itemCost);
 

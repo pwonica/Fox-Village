@@ -73,7 +73,7 @@ public class Movement : MonoBehaviour {
 
     public void ResetWandering()
     {
-        print("Resetting waypoint");
+        //print("Resetting waypoint");
         currentWaypoint = randomWayPoint;
         GetRandomWaypoint();
     }

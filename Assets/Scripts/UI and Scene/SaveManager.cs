@@ -119,16 +119,21 @@ public class GameData
 public class FoxData
 {
     public string foxName;
+    public string foxType;
     public float moveSpeed;
     public float napTime;
     public float napFrequency;
     public float fullness;
     public float fullnessDecay;
 
+    //probably can't just take the object, access through type
+    //public FoxCollectionLog foxLog;
+
     public FoxData(GameObject foxObject)
     {
         Fox fox = foxObject.GetComponent<Fox>();
         foxName = fox.foxName;
+        foxType = fox.foxType;
         moveSpeed = fox.moveSpeed;
         napTime = fox.averageNapTime;
         napFrequency = fox.averageNapApart;

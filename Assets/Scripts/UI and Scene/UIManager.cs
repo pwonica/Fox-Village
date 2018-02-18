@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour {
     public static UIManager instance = null;
     public GameObject uiFeedbackIcon;
     public GameObject pfab_uiAnchoredText;
+    public GameObject pfab_uiFloatingPopup;
     public GameObject pfab_uiFoxInfoRect;
     public GameObject pfab_uiFoxInfoPopup;
     private Canvas canvas;
@@ -78,6 +79,13 @@ public class UIManager : MonoBehaviour {
         objectToCreate.GetComponent<Drag>().uiLocation = objectTransform;
     }
 
+    public void CreateFloatingUpdate(string textToAssign)
+    {
+        GameObject objectToCreate = Instantiate(pfab_uiFloatingPopup) as GameObject;
+        objectToCreate.transform.SetParent(canvas.transform, false);
+        objectToCreate.GetComponentInChildren<Text>().text = textToAssign;
+    }
+
     public void CreateFeedbackIcon(Transform whichTransform, FeedbackIconType whichIconType)
     {
         GameObject objectToCreate = Instantiate(uiFeedbackIcon) as GameObject;
@@ -102,17 +110,21 @@ public class UIManager : MonoBehaviour {
         //create the text object 
         GameObject objectToCreate = Instantiate(pfab_uiAnchoredText) as GameObject;
         objectToCreate.transform.SetParent(foxNamesHierachy, false);
-        objectToCreate.GetComponent<Text>().text = textToAssign;
+        //note = uses a panel as parent with text as child
+        objectToCreate.GetComponentInChildren<Text>().text = textToAssign;
         objectToCreate.GetComponent<UIAnchor>().objectToFollow = transformToFollow;
 
         return objectToCreate;
     }
 
     //use the fox data to 
-    public void CreateFoxInfoPopup(FoxData foxdata)
+    public void CreateFoxInfoPopup(FoxCollectionLog _foxData, float statSpeed, float statNap, float statHunger)
     {
         GameObject objectToCreate = Instantiate(pfab_uiFoxInfoPopup) as GameObject;
         objectToCreate.transform.SetParent(canvas.transform, false);
+        //objectToCreate.GetComponent<ui_foxInfoCard>().foxData = _foxData;
+        objectToCreate.GetComponent<ui_foxInfoCard>().InitInfoCard(_foxData, statSpeed, statNap, statHunger);
+
         isPopupActive = true;
     }
 
@@ -122,6 +134,24 @@ public class UIManager : MonoBehaviour {
         isPopupActive = false;
         Destroy(whichObject);
     }
+
+    public void OpenScreen(GameObject whichScreen)
+    {
+        isPopupActive = true;
+        whichScreen.SetActive(true);
+        //todo make everything but the source button inactive to avoid random button presses
+        //todo pause the game
+    }
+
+    public void CloseScreen(GameObject whichScreen)
+    {
+        isPopupActive = false;
+        whichScreen.SetActive(false);
+        //todo make everything but the source button inactive to avoid random button presses
+        //todo unpause the game
+    }
+
+
 
     public void ChangeHoverOverState(GameObject whichObject, bool whichState)
     {

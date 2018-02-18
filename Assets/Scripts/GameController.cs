@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameController : MonoBehaviour {
 
     public static GameController instance = null;
+    public FoxCollection foxCollection;
 
     public int points = 0;
     public int foxRemovePoints;
@@ -44,14 +45,16 @@ public class GameController : MonoBehaviour {
         //AddFox();
         passiveBoostTimer = passivePointBoost_time;
 
+
+
         /*
         //if there is save data, load the foxes first
         if (SaveManager.DoesSaveDataExist())
         {
             SaveManager.LoadGame();
         }
-        
-    */
+        */
+    
         //check if there's active save data, if so load from the save data
 
     }
@@ -80,11 +83,40 @@ public class GameController : MonoBehaviour {
     }
 
     //at some point, condense the add fox into one single thing
+    /*
     public void AddFox()
     {
         GameObject foxToCreate = Instantiate(pfabFox, foxSpawnLocation.position, Quaternion.identity);
+        //create the fox model
+        Transform foxModel = Instantiate(foxCollection.GetRandomFox(), foxToCreate.transform.position, foxToCreate.transform.rotation);
+        foxToCreate.GetComponent<Fox>().foxModel = foxModel;
+        //parent to the collision object in fox'
+        foxModel.transform.SetParent(foxToCreate.GetComponent<Fox>().foxTransform);
+
         foxToCreate.GetComponent<Fox>().RandomizeFox();
         foxToCreate.name = foxToCreate.GetComponent<Fox>().foxName;
+        foxList.Add(foxToCreate);
+    }
+    */
+
+    public void AddFoxFromShop(string foxType, string _foxName)
+    {
+        GameObject foxToCreate = Instantiate(pfabFox, foxSpawnLocation.position, Quaternion.identity);
+
+        //create the fox model
+        //todo this should be it's own thing, maybe in the fox class? 
+        FoxCollectionLog foxLog = FoxCollection.instance.GetFoxFromCollection(foxType);
+        
+        Transform foxModel = Instantiate(foxLog.foxMesh, foxToCreate.transform.position, foxToCreate.transform.rotation);
+        foxToCreate.GetComponent<Fox>().foxModel = foxModel;
+        //parent to the collision object in fox'
+        foxModel.transform.SetParent(foxToCreate.GetComponent<Fox>().foxTransform);
+        foxToCreate.GetComponent<Fox>().RandomizeFox();
+        foxToCreate.GetComponent<Fox>().foxName = _foxName;
+        foxToCreate.GetComponent<Fox>().foxType = foxLog.foxType;
+
+        //foxToCreate.GetComponent<Fox>().foxLog = _foxData;
+        foxToCreate.name = _foxName;
         foxList.Add(foxToCreate);
     }
 
@@ -92,14 +124,23 @@ public class GameController : MonoBehaviour {
     {
         GameObject foxToCreate = Instantiate(pfabFox, foxSpawnLocation.position, Quaternion.identity);
         Fox fox = foxToCreate.GetComponent<Fox>();
+        string foxType = foxData.foxType;
+        FoxCollectionLog foxLog = FoxCollection.instance.GetFoxFromCollection(foxType);
+        print(foxData);
 
         //assign values to the fox based on the data object created 
         fox.foxName = foxData.foxName;
+
         fox.averageNapApart = foxData.napFrequency;
         fox.averageNapTime = foxData.napTime;
         fox.fullnessDecay = foxData.fullnessDecay;
         fox.fullness = foxData.fullness;
         fox.moveSpeed = foxData.moveSpeed;
+
+        Transform foxModel = Instantiate(foxLog.foxMesh, foxToCreate.transform.position, foxToCreate.transform.rotation);
+        foxToCreate.GetComponent<Fox>().foxModel = foxModel;
+        //parent to the collision object in fox'
+        foxModel.transform.SetParent(foxToCreate.GetComponent<Fox>().foxTransform);
 
         foxToCreate.name = foxData.foxName;
         print("Creating fox from sava data: " + fox.foxName);
@@ -114,7 +155,7 @@ public class GameController : MonoBehaviour {
     {
         if (points > foxPurchaseCost)
         {
-            AddFox();
+            //AddFox();
             SubtractPoints(foxPurchaseCost);
         }
         else

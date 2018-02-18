@@ -9,13 +9,16 @@ public class ui_foxInfoCard : MonoBehaviour {
     public Slider sliderSpeed;
     public Slider sliderNapping;
     public Slider sliderHunger;
-    public FoxData foxData;
 
     // Use this for initialization
     void Start () {
 
 	}
-	
+
+    public void InitInfoCard(FoxCollectionLog _foxLog, float statSpeed, float statNap, float statHunger)
+    {
+
+    }
 	// Update is called once per frame
 	void Update () {
 		

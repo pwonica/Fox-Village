@@ -16,11 +16,12 @@ public class Fox : MonoBehaviour {
 
     //FOXDATA Variables
     public string foxName;
+    public string foxType;                                             //used to access it's type in the collection 
     public float fullness = 70;
     public float moveSpeed;
     [HideInInspector] public float averageNapTime;
     public float fullnessDecay;
-
+    public FoxCollectionLog foxLog;
 
     //Non-flexbile unique variables 
     public float fullnessDecreaseFrequency;                                     //how often the fox will decrease it's fullness
@@ -43,19 +44,26 @@ public class Fox : MonoBehaviour {
 
     private Text txtFoxNameDisplay;
     private GameObject uiFeedbackIcon;
+    //private FoxCollection foxCollection;
+
 
     private void Awake()
     {
         //canvas = FindObjectOfType<Canvas>();
         //cam = FindObjectOfType<Camera>();
         foxAI = GetComponent<FoxAI>();
+        //foxCollection = FindObjectOfType<FoxCollection>();
+
+
     }
     private void Start()
     {
-        //foxName = NameGenerator.instance.GetName();
+        //create the correct fox model
         Invoke("DecreaseFullness", 0f);
-        anchorTextReference = UIManager.instance.CreateAnchoredText(foxName, foxModel);
+        anchorTextReference = UIManager.instance.CreateAnchoredText(foxName, foxTransform);
         UIManager.instance.AddNameInRectScroll(gameObject);
+        //create the correct fox model
+
 
     }
 
@@ -66,8 +74,6 @@ public class Fox : MonoBehaviour {
         averageNapTime = Random.Range(averageNapTime_min, averageNapTime_max);
         fullnessDecay = Random.Range(averageFullnessDecay_min, averageFullnessDecay_max);
         moveSpeed = Random.Range(moveSpeed_min, moveSpeed_max);
-        foxName = NameGenerator.instance.GetName();
-        name = foxName;
     }
     
     public void EatFood(int valueToAdd)

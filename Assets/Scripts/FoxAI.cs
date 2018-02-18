@@ -6,8 +6,8 @@ public class FoxAI : MonoBehaviour
     public enum States
     {
         wandering,
-        chase,
-        NAP
+        chase,              //anim state = 0
+        NAP                 //anim state = 1
     }
 
     //private Rigidbody rigidbody;
@@ -16,6 +16,8 @@ public class FoxAI : MonoBehaviour
     private Movement movementController;
     private Fox foxCharacter;
     public MeshRenderer modelMesh;
+    public ParticleSystem particleSleep;
+
 
     //variables for movement
     public float moveSpeed;
@@ -33,6 +35,13 @@ public class FoxAI : MonoBehaviour
     //public float napTimeApartMax;
     private float napTimeApartCurrent;
 
+    //variables for animation
+    public Animator anim;
+    public float animationSpeedMin;
+    public float animationSpeedMax;
+    private float animationSpeed;
+
+
     //AI State machines
     public States aiState;
 
@@ -49,7 +58,21 @@ public class FoxAI : MonoBehaviour
         //get the movement speed from the top AI 
         moveSpeed = foxCharacter.moveSpeed;
         aiState = States.wandering;
+        anim = GetComponentInChildren<Animator>();
+
+        //calculuate the hop speed, //note, this affects ALL animations
+        anim.speed = CalculateAnimationSpeed();
+        
+
         SetNapTimer();
+    }
+
+    private float CalculateAnimationSpeed()
+    {
+        float scalarValue = (animationSpeedMax - animationSpeedMin) / (foxCharacter.moveSpeed_max - foxCharacter.moveSpeed_min);
+        float _animationSpeed = foxCharacter.moveSpeed * scalarValue; 
+
+        return _animationSpeed;
     }
 
     //todo turn the fox ai into a courotuine system
@@ -72,6 +95,8 @@ public class FoxAI : MonoBehaviour
                     //movementController.MovingTowardsPoint();
                     //set the speed 
                     currentSpeed = moveSpeed;
+                    anim.SetInteger("whichAnimState", 0);
+
                     movementController.Move(currentSpeed);
                 }
                 break;
@@ -86,6 +111,8 @@ public class FoxAI : MonoBehaviour
                 if (movementController.ReachedLocation())
                 {
                     movementController.Move(0f);
+                    
+
                 }
                 //move at faster speed
                 else
@@ -96,6 +123,7 @@ public class FoxAI : MonoBehaviour
                 break;
             case States.NAP:
                 movementController.Move(0f);
+                anim.SetInteger("whichAnimState", 1);
                 Nap();
                 break;
 
@@ -118,27 +146,33 @@ public class FoxAI : MonoBehaviour
 
     private void ExitNap()
     {
+        print("Exiting nap state");
+        //turn off particle system
+        particleSleep.Stop();
         aiState = States.wandering;
         movementController.ResetWandering();
         napTimer = 0;
         boxCollider.enabled = true;
         detectorFood.GetComponent<BoxCollider>().enabled = true;
         foxCharacter.currentNapDecayModifier = 1;                                   //reset the modifier to the standard rate
-        modelMesh.material.color = Color.white;
         SetNapTimer();
     }
 
     public void EnterNap()
     {
+        print("Entering Nap State");
         //get a random number for the nap
         aiState = States.NAP;
+        particleSleep.Play();
         boxCollider.enabled = false;
         detectorFood.GetComponent<BoxCollider>().enabled = false;
         //todo change the random value to a variable if I want greater control (ex, -5, +5)
         napDuration = Random.Range(foxCharacter.averageNapTime - 5, foxCharacter.averageNapTime + 5);
         //switch the modifier to be minimize it during naps
         foxCharacter.currentNapDecayModifier = foxCharacter.napDecayModifier;
-        modelMesh.material.color = Color.blue;
+
+
+        //modelMesh.material.color = Color.blue;
         //reset the nap timer
     }
     
